@@ -21,7 +21,7 @@
 
 
 <MPRowTitle@Label>:
-    font_size: "22sp"
+    font_size: FONT_EMPH
     bold: True
     color: 0.85, 0.88, 0.92, 1
     halign: "left"
@@ -30,7 +30,7 @@
 
 
 <MPUnit@Label>:
-    font_size: "20sp"
+    font_size: FONT_MD
     bold: True
     color: 0.70, 0.72, 0.76, 1
     halign: "left"
@@ -62,7 +62,7 @@
 
     Label:
         text: self.parent._safe_text(self.parent._text, self.parent._hint)
-        font_size: "22sp"
+        font_size: FONT_EMPH
         bold: True
         color: (0.75, 0.75, 0.75, 1) if self.parent._disabled else ((0.18, 0.70, 0.30, 1) if self.parent._state == "green" else ((0.85, 0.20, 0.20, 1) if self.parent._state == "red" else (0.40, 0.40, 0.40, 1)))
         #color: (
@@ -95,7 +95,7 @@
 
     Label:
         text: self.parent._safe_text(self.parent._text, "--")
-        font_size: "28sp"
+        font_size: FONT_LG
         bold: True
         color: 1.0, 0.55, 0.25, 1
         halign: "center"
@@ -122,7 +122,7 @@
 
     Label:
         text: self.parent._text
-        font_size: "22sp"
+        font_size: FONT_EMPH
         bold: True
         color: (0.45, 0.45, 0.45, 1) if self.parent._disabled else (1, 1, 1, 1)
         halign: "center"
@@ -156,14 +156,14 @@
 
             DarkTab:
                 text: "⟵ Back"
-                font_size: "25sp"
+                font_size: FONT_LG
                 bold: True
                 on_release: root.go_back()
 
             DarkTab:
                 text: "Make Profile"
                 tab_key: "make_profile"
-                font_size: "25sp"
+                font_size: FONT_LG
                 bold: True
                 state: "down"
 
@@ -293,7 +293,7 @@
                             text_size: self.size
                             color: 0.85, 0.88, 0.92, 1
                             bold: True
-                            font_size: "18sp"
+                            font_size: FONT_SM
                             padding_x: dp(12)
 
                         MPDisplayBox:
@@ -314,7 +314,7 @@
                             text_size: self.size
                             color: 0.85, 0.88, 0.92, 1
                             bold: True
-                            font_size: "18sp"
+                            font_size: FONT_SM
                             padding_x: dp(12)
 
                         MPDisplayBox:
@@ -335,7 +335,7 @@
                             text_size: self.size
                             color: 0.85, 0.88, 0.92, 1
                             bold: True
-                            font_size: "18sp"
+                            font_size: FONT_SM
                             padding_x: dp(12)
 
                         MPDisplayBox:
@@ -922,7 +922,7 @@
                             text_size: self.size
                             color: 0.85, 0.88, 0.92, 1
                             bold: True
-                            font_size: "18sp"
+                            font_size: FONT_SM
                             padding_x: dp(12)
 
                         MPDisplayBox:

@@ -2,11 +2,14 @@ import time
 import ssl
 from paho.mqtt import client as mqtt_client
 
-broker = '08bb54f5ee234a86ba2d3e07280da8ed.s1.eu.hivemq.cloud'
-port = 8883
+from services.config import load_config
+
+_mqtt_cfg = load_config()["mqtt"]
+broker = _mqtt_cfg["broker"]
+port = _mqtt_cfg["port"]
 topic = "TOPIC1"
-username = "roaster"
-password = "CemGozek1!"
+username = _mqtt_cfg["username"]
+password = _mqtt_cfg["password"]
 
 
 def connect_mqtt():

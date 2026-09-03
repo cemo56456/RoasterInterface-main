@@ -41,18 +41,6 @@ class ModbusTCPClient:
             self.sock = None
             return False
 
-
-#    def connect_eski(self) -> bool:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(self.timeout)
-            s.connect((self.host, self.port))
-            self.sock = s
-            return True
-        except Exception:
-            self.sock = None
-            return False
-
     def close(self):
         try:
             if self.sock:
@@ -237,52 +225,53 @@ class ModbusTCPClient:
         except Exception as e:
             return False, str(e)
 
-def read_coils(self, start_coil, qty):
-    """
-    Modbus TCP - Read Coils (FC01)
-    start_coil : coil address (0-based)
-    qty        : number of coils
-    return     : (list[0/1], err)
-    """
-    try:
-        # ---- MBAP HEADER ----
-        self._tid = (self._tid + 1) & 0xFFFF
-        tid = self._tid
+    def read_coils(self, start_coil: int, qty: int):
+        """
+        FC01 - Read Coils
+        start_coil : 0-based coil address
+        qty        : number of coils
+        returns    : (list[0/1], err)
+        """
+        if qty <= 0 or qty > 2000:
+            return None, "qty out of range"
 
-        # Transaction ID, Protocol ID, Length, Unit ID
-        mbap = struct.pack(">HHHB", tid, 0, 6, self.unit_id)
+        with self.lock:
+            if not self._ensure():
+                return None, "connect failed"
 
-        # ---- PDU ----
-        pdu = struct.pack(">BHH", 0x01, start_coil, qty)
+            pdu = struct.pack(">BHH", 0x01, start_coil, qty)
 
-        frame = mbap + pdu
-        self.sock.send(frame)
+            try:
+                rpdu, err = self._send_pdu(pdu)
+            except Exception as e:
+                self.close()
+                return None, f"tcp: {e}"
 
-        # ---- RESPONSE HEADER ----
-        hdr = self._recv_all(7)
-        r_tid, _, length, _ = struct.unpack(">HHHB", hdr)
+            if rpdu is None:
+                return None, err
 
-        if r_tid != tid:
-            return None, "TID mismatch"
+            fc = rpdu[0]
+            if fc & 0x80:
+                ex = rpdu[1] if len(rpdu) > 1 else 0
+                return None, f"exception 0x{ex:02X}"
 
-        body = self._recv_all(length - 1)
+            if fc != 0x01:
+                return None, "bad response"
 
-        func = body[0]
-        if func & 0x80:
-            return None, f"Exception {body[1]}"
+            if len(rpdu) < 2:
+                return None, "short response"
 
-        byte_count = body[1]
-        data = body[2:2 + byte_count]
+            bytecount = rpdu[1]
+            data = rpdu[2:2 + bytecount]
+            if len(data) != bytecount:
+                return None, "short data"
 
-        coils = []
-        for i in range(qty):
-            byte_i = i // 8
-            bit_i = i % 8
-            coils.append((data[byte_i] >> bit_i) & 0x01)
+            coils = []
+            for i in range(qty):
+                byte_i = i // 8
+                bit_i = i % 8
+                coils.append((data[byte_i] >> bit_i) & 0x01)
 
-        return coils, None
-
-    except Exception as e:
-        return None, str(e)
+            return coils, None
 
 

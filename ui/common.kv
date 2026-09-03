@@ -3,6 +3,18 @@
 #:import ButtonBehavior kivy.uix.behaviors.ButtonBehavior
 
 # =========================================================
+# TYPE SCALE (shared across all screens - loaded before them)
+# =========================================================
+#:set FONT_XS "14sp"
+#:set FONT_SM "17sp"
+#:set FONT_MD "20sp"
+#:set FONT_EMPH "22sp"
+#:set FONT_LG "25sp"
+#:set FONT_XL "36sp"
+#:set FONT_XXL "44sp"
+#:set FONT_DISPLAY "54sp"
+
+# =========================================================
 # BASIC STYLES (ORTAK)
 # =========================================================
 
@@ -23,7 +35,7 @@
     background_down: ""
     background_color: 0,0,0,0
     color: 0.92, 0.94, 0.98, 1
-    font_size: "18sp"
+    font_size: FONT_SM
     text_size: self.size
     halign: "center"
     valign: "middle"
@@ -43,7 +55,7 @@
     background_down: ""
     background_color: 0,0,0,0
     color: 0.86, 0.88, 0.92, 1
-    font_size: "18sp"
+    font_size: FONT_SM
     bold: True
     text_size: self.size
     halign: "center"

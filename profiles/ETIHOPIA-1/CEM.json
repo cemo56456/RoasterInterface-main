@@ -1,7 +1,7 @@
 {
   "profile_name": "CEM",
-  "coffee_origin": "Brasil",
-  "coffee_origin_png": "C:\\Users\\ergun\\PycharmProjects\\RoasterInterface\\assets\\origin\\Brasil.png",
+  "coffee_origin": "Brazil",
+  "coffee_origin_png": "C:\\Users\\ergun\\PycharmProjects\\RoasterInterface\\assets\\origin\\Brazil.png",
   "drop_down_temp": 200.0,
   "first_crack_temp": 180.0,
   "second_crack_temp": 190.0,

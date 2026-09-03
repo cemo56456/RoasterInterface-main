@@ -31,6 +31,7 @@ from widgets.status_led import StatusLed
 # ✅ Modbus
 from services.modbus_tcp_client import ModbusTCPClient
 from services.mqtt_service import MQTTService
+from services.config import load_config
 from widgets.status_anim import StatusAnim
 
 from kivy.uix.popup import Popup
@@ -86,11 +87,13 @@ class RoastDashboardApp(App):
         self.modbus_client = None  # ✅ GLOBAL Modbus client
         self.mqtt = None
 
-        # ✅ Modbus connection settings
-        self.modbus_host = "192.168.1.50"
-        self.modbus_port = 502
-        self.modbus_unit_id = 2
-        self.modbus_timeout = 1.5
+        # ✅ Connection settings (from config.json, not hardcoded)
+        config = load_config()
+        self.modbus_host = config["modbus"]["host"]
+        self.modbus_port = config["modbus"]["port"]
+        self.modbus_unit_id = config["modbus"]["unit_id"]
+        self.modbus_timeout = config["modbus"]["timeout"]
+        self.mqtt_config = config["mqtt"]
 
         self._modbus_watchdog_ev = None
         self.modbus_connected = False
@@ -310,13 +313,16 @@ class RoastDashboardApp(App):
         Window.bind(on_key_down=self._on_user_activity)
         self._idle_check_ev = Clock.schedule_interval(self._check_idle_timeout, 1.0)
 
-        self.mqtt = MQTTService(
-            broker="08bb54f5ee234a86ba2d3e07280da8ed.s1.eu.hivemq.cloud",
-            port=8883,
-            username="roaster",
-            password="CemGozek1!",
-        )
-        self.mqtt.connect()
+        if self.mqtt_config.get("broker"):
+            self.mqtt = MQTTService(
+                broker=self.mqtt_config["broker"],
+                port=self.mqtt_config["port"],
+                username=self.mqtt_config["username"],
+                password=self.mqtt_config["password"],
+            )
+            self.mqtt.connect()
+        else:
+            print("[App] MQTT broker not configured in config.json, skipping connect")
 
 
         sm.current = "home"

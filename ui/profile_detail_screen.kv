@@ -4,7 +4,7 @@
 
 
 <RowTitle@Label>:
-    font_size: "20sp"
+    font_size: FONT_MD
     bold: True
     color: 0.70, 0.72, 0.75, 1
     halign: "left"
@@ -12,7 +12,7 @@
     text_size: self.size
 
 <UnitLabel@Label>:
-    font_size: "18sp"
+    font_size: FONT_SM
     bold: True
     color: 0.55, 0.58, 0.62, 1
     halign: "left"
@@ -20,7 +20,7 @@
     text_size: self.size
 
 <ValueBox@Button>:
-    font_size: "20sp"
+    font_size: FONT_MD
     bold: True
     color: 0.10, 0.10, 0.12, 1
     background_normal: ""
@@ -38,7 +38,7 @@
             radius: [dp(6), dp(6), dp(6), dp(6)]
 
 <NameBox@Button>:
-    font_size: "20sp"
+    font_size: FONT_MD
     bold: True
     color: 0.10, 0.10, 0.12, 1
     background_normal: ""
@@ -77,14 +77,14 @@
 
             DarkTab:
                 text: "← Back"
-                font_size: "25sp"
+                font_size: FONT_LG
                 bold: True
                 color: 1, 1, 1, 1
                 on_release: root.exit_screen()
 
             DarkTab:
                 text: root.title_text if root.title_text else "Profile"
-                font_size: "25sp"
+                font_size: FONT_LG
                 bold: True
                 color: 1, 1, 1, 1
                 state: "down"
@@ -637,7 +637,7 @@
 
                                 #width: dp(150)
                                 bold: True
-                                font_size: "16sp"
+                                font_size: FONT_SM
                                 background_normal: ""
                                 background_down: ""
                                 background_color: (0.25, 0.60, 0.95, 1) if root.profile_mode != "dev" else (0.18, 0.19, 0.22, 1)
@@ -654,7 +654,7 @@
 
                                 #width: dp(150)
                                 bold: True
-                                font_size: "16sp"
+                                font_size: FONT_SM
                                 background_normal: ""
                                 background_down: ""
                                 background_color: (0.25, 0.60, 0.95, 1) if root.profile_mode == "dev" else (0.18, 0.19, 0.22, 1)
@@ -688,7 +688,7 @@
                             text: "Send To PLC"
                             size_hint_y: None
                             height: dp(60)
-                            font_size: "22sp"
+                            font_size: FONT_EMPH
                             bold: True
                             on_release: root.confirm_send_to_plc()
 
@@ -696,7 +696,7 @@
                             text: "Save"
                             size_hint_y: None
                             height: dp(60)
-                            font_size: "22sp"
+                            font_size: FONT_EMPH
                             bold: True
                             on_release: root.save_profile()
 
@@ -704,6 +704,6 @@
                             text: "Exit"
                             size_hint_y: None
                             height: dp(60)
-                            font_size: "22sp"
+                            font_size: FONT_EMPH
                             bold: True
                             on_release: root.exit_screen()

@@ -1,6 +1,5 @@
 #:kivy 2.2.0
 #:import dp kivy.metrics.dp
-#:import BeanRoastAnim widgets.bean_roast_anim.BeanRoastAnim
 #:import Clock kivy.clock.Clock
 #:import ButtonBehavior kivy.uix.behaviors.ButtonBehavior
 #:import StatusLed widgets.status_led.StatusLed
@@ -41,7 +40,7 @@
 
                     ClickLabel:
                         text: "Sigma Coffee Roaster\nProfesional"
-                        font_size: "54sp"
+                        font_size: FONT_DISPLAY
                         bold: True
                         color: 0.92, 0.94, 0.98, 1
                         halign: "center"
@@ -64,27 +63,13 @@
 
         #    ClickLabel:
         #        text: "Sigma Coffee Roaster\nProfesional"
-        #        font_size: "54sp"
+        #        font_size: FONT_DISPLAY
         #        bold: True
         #        color: 0.92, 0.94, 0.98, 1
         #        halign: "center"
         #        valign: "middle"
         #        text_size: self.size
         #        on_release: root.go_live()
-
-        FloatLayout:
-            size_hint_y: None
-            height: dp(260)
-
-            BeanRoastAnim:
-                id: roast_anim_home
-                size_hint: None, None
-                size: dp(340), dp(220)
-                center_x: self.parent.center_x
-                center_y: self.parent.center_y
-                green_source: "assets/beans/bean_green_transparent.png"
-                dark_source: "assets/beans/bean_dark_transparent.png"
-                intensity: 0.8
 
         FloatLayout:
             size_hint_y: 1
