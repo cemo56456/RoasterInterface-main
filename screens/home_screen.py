@@ -1,4 +1,3 @@
-from kivy.uix.screenmanager import Screen
 from kivy.app import App
 from kivy.clock import Clock
 
@@ -7,21 +6,19 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 
+from screens.base_screen import BaseRoasterScreen
+
 #to make exe
 #pyinstaller --onefile --windowed --noconfirm --add-data "ui;ui" --add-data "assets;assets" --add-data "profiles;profiles" --hidden-import "widgets.bean_roast_anim" main.py
 #.\.venv\Scripts\Activate.ps1
 
-class HomeScreen(Screen):
+class HomeScreen(BaseRoasterScreen):
+    active_tab_name = "home"
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._close_hold_ev = None
         self._close_popup = None
-
-    def on_enter(self, *args):
-        try:
-            App.get_running_app().active_tab = "home"
-        except Exception:
-            pass
 
     def on_leave(self, *args):
         # hold event varsa iptal

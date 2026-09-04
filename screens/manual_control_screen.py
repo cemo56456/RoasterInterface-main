@@ -1,9 +1,9 @@
-from kivy.uix.screenmanager import Screen
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.properties import StringProperty, NumericProperty
 
 from services.numeric_keypad import NumericKeypadPopup
+from screens.base_screen import BaseRoasterScreen
 
 
 def fmt_tr_temp(val_c: float) -> str:
@@ -31,7 +31,9 @@ def fmt_mmss(total_seconds: int) -> str:
         return "00:00"
 
 
-class ManualControlScreen(Screen):
+class ManualControlScreen(BaseRoasterScreen):
+    active_tab_name = "manual"
+
     # ---------------- top cards ----------------
     set_text = StringProperty("0,0°C")          # editable
     drum_temp_text = StringProperty("0,0°C")    # read-only
@@ -103,11 +105,7 @@ class ManualControlScreen(Screen):
     # lifecycle
     # =========================================================
     def on_enter(self, *args):
-        try:
-            App.get_running_app().active_tab = "manual"
-        except Exception:
-            pass
-
+        super().on_enter(*args)
         self._attach_client_from_live()
         self._resume_poll()
 
@@ -122,39 +120,8 @@ class ManualControlScreen(Screen):
             pass
 
     def _attach_client_from_live(self):
-        c = None
-        src = ""
-
-        if self.manager:
-            # 1) live
-            try:
-                live = self.manager.get_screen("live")
-                c = getattr(live, "client", None) or getattr(live, "modbus", None)
-                src = 'manager.get_screen("live")'
-            except Exception:
-                c = None
-
-            # 2) live_roast
-            if c is None:
-                try:
-                    live2 = self.manager.get_screen("live_roast")
-                    c = getattr(live2, "client", None) or getattr(live2, "modbus", None)
-                    src = 'manager.get_screen("live_roast")'
-                except Exception:
-                    c = None
-
-        # 3) App attribute (opsiyonel)
-        if c is None:
-            try:
-                app = App.get_running_app()
-                c = getattr(app, "client", None) or getattr(app, "modbus_client", None)
-                if c is not None:
-                    src = "App attribute"
-            except Exception:
-                c = None
-
-        self.client = c
-        self.last_msg = f"Client OK ({src})" if self.client else "Client yok"
+        self.client = self._get_modbus_client()
+        self.last_msg = "Client OK" if self.client else "Client yok"
 
     # =========================================================
     # polling

@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 from kivy.app import App
-from kivy.uix.screenmanager import Screen
 from kivy.properties import StringProperty
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -21,9 +20,12 @@ from kivy.metrics import dp
 
 from services.numeric_keypad import NumericKeypadPopup
 from services.text_keypad import TextKeypadPopup
+from screens.base_screen import BaseRoasterScreen
 
 
-class ProfileDetailScreen(Screen):
+class ProfileDetailScreen(BaseRoasterScreen):
+    active_tab_name = "profile"
+
     mode_buttons_height = NumericProperty(0)
 
 
@@ -85,7 +87,7 @@ class ProfileDetailScreen(Screen):
     do_p2 = StringProperty("")
 
     def on_enter(self, *args):
-        App.get_running_app().active_tab = "profile"
+        super().on_enter(*args)
 
         # ✅ Ekran açılır açılmaz PLC'den mode flag oku
         self.read_mode_from_plc()
@@ -521,19 +523,6 @@ class ProfileDetailScreen(Screen):
     # ---------------------------------------------------------
     # Save
     # ---------------------------------------------------------
-    def _project_root(self) -> Path:
-        try:
-            if getattr(sys, "frozen", False):
-                return Path(sys.executable).resolve().parent
-            return Path(__file__).resolve().parents[1]
-        except Exception:
-            return Path(".").resolve()
-
-    #def _project_root(self) -> Path:
-    #    try:
-    #        return Path(__file__).resolve().parents[1]
-    #    except Exception:
-    #        return Path(".").resolve()
 
     def _sanitize_name(self, s: str) -> str:
         s = (s or "").strip()
@@ -712,84 +701,6 @@ class ProfileDetailScreen(Screen):
         else:
             self.manager.current = "profile"
 
-    # ---------------------------------------------------------
-    # Toast
-    # ---------------------------------------------------------
-    def _toast(self, msg: str):
-        from kivy.factory import Factory
-
-        inner = BoxLayout(orientation="vertical", spacing=dp(14))
-
-        lbl = Label(
-            text=msg,
-            font_size="20sp",
-            bold=True,
-            color=(1, 1, 1, 1),
-            halign="center",
-            valign="middle",
-        )
-        lbl.bind(size=lambda w, *_: setattr(w, "text_size", w.size))
-        inner.add_widget(lbl)
-
-        btn = Factory.RoundedPopupButton(text="OK")
-        inner.add_widget(btn)
-
-        card = BoxLayout(orientation="vertical", padding=dp(16), spacing=dp(12))
-        card.add_widget(inner)
-
-        def _redraw(*_):
-            card.canvas.before.clear()
-            with card.canvas.before:
-                Color(0.12, 0.13, 0.16, 1)
-                RoundedRectangle(pos=card.pos, size=card.size, radius=[dp(22)] * 4)
-
-        card.bind(pos=_redraw, size=_redraw)
-        _redraw()
-
-        pop = Popup(
-            title="",
-            content=card,
-            size_hint=(None, None),
-            size=(dp(520), dp(240)),
-            auto_dismiss=False,
-            separator_height=0,
-            background="",
-            background_color=(0, 0, 0, 0),
-        )
-
-        btn.bind(on_release=lambda *_: pop.dismiss())
-        pop.open()
-
-    # ---------------------------------------------------------
-    # PLC write helpers
-    # ---------------------------------------------------------
-    def _get_modbus_client(self):
-        try:
-            if self.manager and self.manager.has_screen("live"):
-                live = self.manager.get_screen("live")
-                c = getattr(live, "client", None)
-                if c:
-                    return c
-        except Exception:
-            pass
-
-        app = App.get_running_app()
-        for attr in ("modbus_client", "modbus", "client"):
-            c = getattr(app, attr, None)
-            if c:
-                return c
-        return None
-
-    def _write_register_safe(self, client, reg: int, value: int):
-        try:
-            r = client.write_single_register(reg, int(value))
-            if isinstance(r, tuple) and len(r) == 2:
-                ok, err = r
-                return bool(ok), err
-            return bool(r), None
-        except Exception as e:
-            return False, str(e)
-
     def read_mode_from_plc(self):
         client = self._get_modbus_client()
         if not client:
@@ -951,7 +862,7 @@ class ProfileDetailScreen(Screen):
 
         errors = []
         for reg in sorted(mw_map.keys()):
-            ok, err = self._write_register_safe(client, reg, mw_map[reg])
+            ok, err = self._write_reg_safe(client, reg, mw_map[reg])
             if not ok:
                 errors.append(f"MW{reg}: {err or 'write failed'}")
 

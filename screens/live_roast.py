@@ -1,4 +1,3 @@
-from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, StringProperty, BooleanProperty
 
@@ -10,12 +9,15 @@ from kivy.app import App
 from kivy.graphics import Color, RoundedRectangle
 
 from services.numeric_keypad import NumericKeypadPopup
+from screens.base_screen import BaseRoasterScreen
 
 import time
 from datetime import datetime
 
 
-class LiveRoastScreen(Screen):
+class LiveRoastScreen(BaseRoasterScreen):
+    active_tab_name = "live"
+
     # ---------- KV bindings ----------
     m500_state = NumericProperty(0)  # COIL500 (0/1) -> ACTION button color + popup choice
     m501_state = NumericProperty(0)  # COIL501 (0/1) -> Make Profile button color + lock Profile Start
@@ -170,7 +172,7 @@ class LiveRoastScreen(Screen):
             self.client = None
 
     def on_enter(self, *args):
-        App.get_running_app().active_tab = "live"
+        super().on_enter(*args)
         self._attach_client_and_start()
 
     def on_leave(self, *args):

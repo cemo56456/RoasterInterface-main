@@ -13,16 +13,17 @@ from kivy.properties import (
     ListProperty,
     NumericProperty,
 )
-from kivy.uix.screenmanager import Screen
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 
 from services.numeric_keypad import NumericKeypadPopup
 from services.text_keypad import TextKeypadPopup
+from screens.base_screen import BaseRoasterScreen
 
 
-class MakeProfileScreen(Screen):
+class MakeProfileScreen(BaseRoasterScreen):
+    active_tab_name = "make_profile"
     # ---------------------------------------------------------------------
     # PLC ADDRESS MAP (Send-to-PLC mapping ile AYNI)
     # ---------------------------------------------------------------------
@@ -165,10 +166,7 @@ class MakeProfileScreen(Screen):
 
     # ---------------- lifecycle ----------------
     def on_enter(self, *args):
-        try:
-            App.get_running_app().active_tab = "make_profile"
-        except Exception:
-            pass
+        super().on_enter(*args)
 
         self._start_poll()
 
@@ -230,20 +228,6 @@ class MakeProfileScreen(Screen):
         print(f"[MakeProfile] selected_path={self.selected_path}")
 
     # ---------------- helpers ----------------
-    def _project_root(self) -> Path:
-        try:
-            if getattr(sys, "frozen", False):
-                return Path(sys.executable).resolve().parent
-            return Path(__file__).resolve().parents[1]
-        except Exception:
-            return Path(".").resolve()
-
-    #def _project_root(self) -> Path:
-    #    try:
-    #        return Path(__file__).resolve().parents[1]
-    #    except Exception:
-    #        return Path("../assets/icons").resolve()
-
     def _sanitize_name(self, s: str) -> str:
         s = (s or "").strip()
         s = re.sub(r"[\\/:*?\"<>|]+", "_", s)
@@ -387,54 +371,6 @@ class MakeProfileScreen(Screen):
 
 
 
-
-    # ---------------- modbus ----------------
-    def _get_modbus_client(self):
-        app = App.get_running_app()
-        for attr in ("modbus_client", "modbus", "client"):
-            if hasattr(app, attr):
-                c = getattr(app, attr)
-                if c:
-                    return c
-        return None
-
-    def _read_n_safe(self, client, start_reg: int, qty: int):
-        try:
-            r = client.read_holding_n(start_reg, qty)
-            if isinstance(r, tuple) and len(r) == 2:
-                values, err = r
-                if err:
-                    return None
-                return values
-            return r
-        except Exception:
-            return None
-
-    def _read_one_safe(self, client, reg: int):
-        vals = self._read_n_safe(client, int(reg), 1)
-        if vals and isinstance(vals, (list, tuple)) and len(vals) >= 1:
-            return vals[0]
-        return None
-
-    def _write_reg_safe(self, client, reg: int, value: int):
-        try:
-            r = client.write_single_register(int(reg), int(value))
-            if isinstance(r, tuple) and len(r) == 2:
-                ok, err = r
-                return bool(ok)
-            return bool(r)
-        except Exception:
-            return False
-
-    def _write_coil_safe(self, client, coil: int, value: int):
-        try:
-            r = client.write_single_coil(int(coil), int(value))
-            if isinstance(r, tuple) and len(r) == 2:
-                ok, err = r
-                return bool(ok)
-            return bool(r)
-        except Exception:
-            return False
 
     # ---------------- polling ----------------
     def _start_poll(self):
@@ -1505,49 +1441,3 @@ class MakeProfileScreen(Screen):
             print("[MakeProfile] NumericKeypadPopup open error:", e)
             self._editing_field = ""
 
-    # ---------------- small popup ----------------
-    def _toast(self, msg: str):
-        from kivy.factory import Factory
-
-        inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(16), dp(14)))
-
-        lbl = Label(
-            text=msg,
-            font_size="20sp",
-            bold=True,
-            color=(1, 1, 1, 1),
-            halign="center",
-            valign="top",
-        )
-        lbl.bind(size=lambda w, *_: setattr(w, "text_size", (w.width, None)))
-        lbl.bind(texture_size=lambda w, *_: setattr(w, "height", w.texture_size[1] + dp(10)))
-        inner.add_widget(lbl)
-
-        btn = Factory.RoundedPopupButton(text="OK")
-        inner.add_widget(btn)
-
-        card = BoxLayout(orientation="vertical", padding=dp(16))
-        card.add_widget(inner)
-
-        def _redraw(*_):
-            card.canvas.before.clear()
-            from kivy.graphics import Color, RoundedRectangle
-            with card.canvas.before:
-                Color(0.12, 0.13, 0.16, 1)
-                RoundedRectangle(pos=card.pos, size=card.size, radius=[dp(22)] * 4)
-
-        card.bind(pos=_redraw, size=_redraw)
-        _redraw()
-
-        pop = Popup(
-            title="",
-            content=card,
-            size_hint=(None, None),
-            size=(dp(520), dp(240)),
-            auto_dismiss=False,
-            separator_height=0,
-            background="",
-            background_color=(0, 0, 0, 0),
-        )
-        btn.bind(on_release=lambda *_: pop.dismiss())
-        pop.open()

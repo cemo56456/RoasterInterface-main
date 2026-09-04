@@ -11,10 +11,10 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen
 from kivy.graphics import Color, RoundedRectangle
 
 from services.text_keypad import TextKeypadPopup
+from screens.base_screen import BaseRoasterScreen
 
 
 # ---------------------------------------------------------
@@ -71,7 +71,9 @@ class FolderTile(ButtonBehavior, BoxLayout):
             self.on_long_press(self)
 
 
-class ProfileScreen(Screen):
+class ProfileScreen(BaseRoasterScreen):
+    active_tab_name = "profile"
+
     top_title = StringProperty("PROFILE")
     current_folder = StringProperty("")  # "" => folder view, else file view
     MAX_SLOTS = 20
@@ -85,10 +87,7 @@ class ProfileScreen(Screen):
     _text_kp = None
 
     def on_enter(self, *args):
-        try:
-            App.get_running_app().active_tab = "profile"
-        except Exception:
-            pass
+        super().on_enter(*args)
 
         # ✅ detail'den geri dönüşte file listesine dön
         if getattr(self, "_keep_mode", False) and getattr(self, "_keep_folder", ""):
