@@ -1,5 +1,6 @@
 #:kivy 2.2.0
 #:import dp kivy.metrics.dp
+#:import ButtonBehavior kivy.uix.behaviors.ButtonBehavior
 
 # ---------------------------------------------------------
 # Section header (e.g. "PROFILE")
@@ -17,7 +18,8 @@
 
 # ---------------------------------------------------------
 # One settings row: title + description on the left,
-# the control (added as a child) on the right.
+# the controls (added as children) on the right.
+# Controls should use size_hint_x: None and a fixed width.
 # ---------------------------------------------------------
 <SettingRow@BoxLayout>:
     title: ""
@@ -25,8 +27,7 @@
     size_hint_y: None
     height: dp(96)
     padding: dp(22), dp(12)
-    spacing: dp(16)
-    default_container: ctrl
+    spacing: dp(12)
     canvas.before:
         Color:
             rgba: 0.12, 0.13, 0.16, 1
@@ -56,17 +57,14 @@
             valign: "top"
             text_size: self.size
 
-    BoxLayout:
-        id: ctrl
-        size_hint_x: None
-        width: dp(400)
-
 # ---------------------------------------------------------
-# Segmented option button (used inside a SettingRow)
+# Segmented option button (text only)
 # ---------------------------------------------------------
 <SegButton@Button>:
     selected: False
     current: False
+    size_hint_x: None
+    width: dp(190)
     background_normal: ""
     background_down: ""
     background_color: 0, 0, 0, 0
@@ -88,6 +86,40 @@
         Line:
             rounded_rectangle: self.x + dp(1), self.y + dp(1), self.width - dp(2), self.height - dp(2), dp(14)
             width: dp(1.6)
+
+# ---------------------------------------------------------
+# Language button: [flag] text. Put the flag widget first and
+# a Label second (see SettingsScreen below).
+# ---------------------------------------------------------
+<LangButton@ButtonBehavior+BoxLayout>:
+    selected: False
+    current: False
+    size_hint_x: None
+    width: dp(190)
+    padding: dp(18), dp(10)
+    spacing: dp(12)
+    canvas.before:
+        Color:
+            rgba: (0.0, 0.55, 0.65, 1) if self.selected else (0.20, 0.22, 0.27, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(14),]
+        Color:
+            rgba: (1.0, 0.85, 0.2, 1) if self.current else (0, 0, 0, 0)
+        Line:
+            rounded_rectangle: self.x + dp(1), self.y + dp(1), self.width - dp(2), self.height - dp(2), dp(14)
+            width: dp(1.6)
+
+<FlagTR>:
+    size_hint: None, None
+    size: dp(42), dp(28)
+    pos_hint: {"center_y": 0.5}
+
+<FlagEN>:
+    size_hint: None, None
+    size: dp(42), dp(28)
+    pos_hint: {"center_y": 0.5}
 
 
 # =========================================================
@@ -113,14 +145,14 @@
             spacing: dp(12)
 
             DarkTab:
-                text: "<  Back"
+                text: "<  " + app.t("back", app.lang)
                 font_size: FONT_LG
                 bold: True
                 size_hint_x: 0.3
                 on_release: root.go_back()
 
             DarkTab:
-                text: "Settings"
+                text: app.t("settings", app.lang)
                 tab_key: "live"
                 font_size: FONT_LG
                 bold: True
@@ -138,30 +170,64 @@
                 spacing: dp(10)
                 padding: 0, 0, dp(8), dp(8)
 
+                # ----- PROFILE (always first) -----
                 SettingSection:
-                    text: "PROFILE"
+                    text: app.t("sec_profile", app.lang)
 
                 SettingRow:
-                    title: "Roasting Profile Style"
-                    description: "Active in PLC: " + ("DEV TIME" if root.current_mode == "dev" else "STANDARD")
+                    title: app.t("profile_style", app.lang)
+                    description: app.t("active_in_plc", app.lang).format(app.t("dev_time", app.lang) if root.current_mode == "dev" else app.t("standard", app.lang))
 
                     SegButton:
-                        text: "STANDARD"
+                        text: app.t("standard", app.lang)
                         selected: root.selected_mode == "standard"
                         current: root.current_mode == "standard"
                         on_release: root.select_mode("standard")
-                    Widget:
-                        size_hint_x: None
-                        width: dp(8)
                     SegButton:
-                        text: "DEV TIME"
+                        text: app.t("dev_time", app.lang)
                         selected: root.selected_mode == "dev"
                         current: root.current_mode == "dev"
                         on_release: root.select_mode("dev")
 
+                # ----- GENERAL -----
+                SettingSection:
+                    text: app.t("sec_general", app.lang)
+
+                SettingRow:
+                    title: app.t("language", app.lang)
+                    description: app.t("language_desc", app.lang)
+
+                    LangButton:
+                        selected: root.selected_lang == "tr"
+                        current: root.current_lang == "tr"
+                        on_release: root.select_lang("tr")
+                        FlagTR:
+                        Label:
+                            text: "Türkçe"
+                            font_size: FONT_SM
+                            bold: True
+                            color: (1, 1, 1, 1) if root.selected_lang == "tr" else (0.78, 0.80, 0.85, 1)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                    LangButton:
+                        selected: root.selected_lang == "en"
+                        current: root.current_lang == "en"
+                        on_release: root.select_lang("en")
+                        FlagEN:
+                        Label:
+                            text: "English"
+                            font_size: FONT_SM
+                            bold: True
+                            color: (1, 1, 1, 1) if root.selected_lang == "en" else (0.78, 0.80, 0.85, 1)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+
                 # Yeni ayarlar buraya eklenecek:
-                #   SettingSection:  text: "..."
+                #   SettingSection:  text: app.t("...", app.lang)
                 #   SettingRow:      title/description + kontrol
+                #   Yeni metinler services/i18n.py içindeki STRINGS'e (tr + en) eklenir.
 
         # ---------------- Footer ----------------
         BoxLayout:
@@ -178,7 +244,7 @@
                 text_size: self.size
 
             Button:
-                text: "Apply"
+                text: app.t("apply", app.lang)
                 font_size: FONT_LG
                 bold: True
                 size_hint_x: None

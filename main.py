@@ -35,7 +35,9 @@ from services.modbus_sim_client import ModbusSimClient
 from services.mqtt_service import MQTTService
 from services.config import load_config
 from services.app_settings import load_settings
+from services.i18n import translate, DEFAULT_LANG, LANGUAGES
 from widgets.status_anim import StatusAnim
+from widgets.flags import FlagTR, FlagEN
 
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
@@ -68,6 +70,8 @@ Factory.register("RoastPlot", cls=RoastPlot)
 Factory.register("AirflowGauge", cls=AirflowGauge)
 Factory.register("BarGauge", cls=BarGauge)
 Factory.register("StatusLed", cls=StatusLed)
+Factory.register("FlagTR", cls=FlagTR)
+Factory.register("FlagEN", cls=FlagEN)
 
 # ---- Window ----
 Window.size = (1280, 800)
@@ -89,8 +93,18 @@ class RoastDashboardApp(App):
     comm_indicator_color = ListProperty([1, 0, 0, 1])
     comm_indicator_on = BooleanProperty(True)
 
+    # UI dili ("tr" / "en"); KV: app.t("key", app.lang)
+    lang = StringProperty(DEFAULT_LANG)
+
+    def t(self, key, lang=None):
+        return translate(key, lang or self.lang)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        saved_lang = load_settings().get("language")
+        if saved_lang in LANGUAGES:
+            self.lang = saved_lang
+
         self.modbus_client = None  # ✅ GLOBAL Modbus client
         self.mqtt = None
 
