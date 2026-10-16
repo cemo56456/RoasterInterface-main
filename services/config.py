@@ -45,6 +45,8 @@ def load_config():
             if section in data:
                 config[section].update(data[section])
 
+        config["simulation"] = bool(data.get("simulation", False))
+
     except FileNotFoundError:
         print(f"[Config] {path} not found, using defaults")
     except Exception as e:

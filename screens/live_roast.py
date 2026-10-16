@@ -1,4 +1,4 @@
-from kivy.clock import Clock
+﻿from kivy.clock import Clock
 from kivy.properties import NumericProperty, StringProperty, BooleanProperty
 
 from kivy.uix.popup import Popup
@@ -401,80 +401,11 @@ class LiveRoastScreen(BaseRoasterScreen):
         self._plot_hold_active = False
         self._plot_hold_ev = None
 
-        # popup zaten açıksa tekrar açma
-        if self._mode_popup is not None:
-            return
-
-        # popup sırasında poll çakışmasın
-        self._pause_poll()
-
-        from kivy.factory import Factory
-
-        inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
-
-        title = Label(
-            text="CONFIRM",
-            font_size="22sp",
-            bold=True,
-            color=(1, 1, 1, 1),
-            size_hint_y=None,
-            height=dp(34),
-            halign="center",
-            valign="middle",
-        )
-        title.bind(size=lambda w, *_: setattr(w, "text_size", w.size))
-        inner.add_widget(title)
-
-        msg = Label(
-            text="Are you sure to change\nroasting profile style?",
-            font_size="20sp",
-            color=(1, 1, 1, 1),
-            halign="center",
-            valign="middle",
-        )
-        msg.bind(size=lambda w, *_: setattr(w, "text_size", w.size))
-        inner.add_widget(msg)
-
-        inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(8)))
-
-        row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_no = Factory.RoundedPopupButtonSmall(text="No")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
-        row.add_widget(b_no)
-        row.add_widget(b_yes)
-        inner.add_widget(row)
-
-        card = self._make_dark_card(inner, radius=22)
-        pop = self._dark_popup(card, w=760, h=320)
-        self._mode_popup = pop
-
-        def _close(*_):
-            try:
-                pop.dismiss()
-            except Exception:
-                pass
-            self._mode_popup = None
-            self._resume_poll()
-
-        def _yes(*_):
-            try:
-                current_is_dev = (self.profile_mode == "dev")
-                target = 0 if current_is_dev else 1
-
-                ok, err = self.client.write_single_register(int(self.REG_PROFILE_MODE_WRITE), int(target))
-                if ok:
-                    self.profile_mode = "dev" if int(target) == 1 else "standard"
-                    self.last_read = f"MW{int(self.REG_PROFILE_MODE_WRITE)} <= {target}"
-                else:
-                    self.last_read = f"MW{int(self.REG_PROFILE_MODE_WRITE)} write FAIL: {err}"
-            except Exception as e:
-                self.last_read = f"MW{int(self.REG_PROFILE_MODE_WRITE)} write EXC: {e}"
-
-            _close()
-
-        b_no.bind(on_release=_close)
-        b_yes.bind(on_release=_yes)
-        pop.open()
+        # küçük popup yerine tam ekran Settings ekranına git
+        try:
+            self.manager.current = "settings"
+        except Exception as e:
+            self.last_read = f"settings screen open failed: {e}"
 
     # ---------- COIL501 helpers ----------
     def _set_m501(self, value: int):

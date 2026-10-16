@@ -1,4 +1,4 @@
-from kivy.config import Config
+﻿from kivy.config import Config
 
 Config.set("graphics", "width", "1280")
 Config.set("graphics", "height", "800")
@@ -21,6 +21,7 @@ from screens.profile_screen import ProfileScreen
 from screens.make_profile_screen import MakeProfileScreen
 from screens.manual_control_screen import ManualControlScreen
 from screens.profile_detail_screen import ProfileDetailScreen
+from screens.settings_screen import SettingsScreen
 
 # widgets
 from widgets.roast_plot import RoastPlot
@@ -30,6 +31,7 @@ from widgets.status_led import StatusLed
 
 # ✅ Modbus
 from services.modbus_tcp_client import ModbusTCPClient
+from services.modbus_sim_client import ModbusSimClient
 from services.mqtt_service import MQTTService
 from services.config import load_config
 from widgets.status_anim import StatusAnim
@@ -51,9 +53,13 @@ def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
+        base_path = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(base_path, relative_path)
+
+# KV dosyalarındaki göreli "assets/..." yolları için çalışma klasörünü sabitle
+if not getattr(sys, "frozen", False):
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # ---- Factory register (KV import istemesin) ----
 Factory.register("StatusAnim", cls=StatusAnim)
@@ -94,6 +100,8 @@ class RoastDashboardApp(App):
         self.modbus_unit_id = config["modbus"]["unit_id"]
         self.modbus_timeout = config["modbus"]["timeout"]
         self.mqtt_config = config["mqtt"]
+        # Simülasyon: config.json'da "simulation": true veya ROASTER_SIM=1
+        self.simulation = bool(config.get("simulation")) or os.environ.get("ROASTER_SIM") == "1"
 
         self._modbus_watchdog_ev = None
         self.modbus_connected = False
@@ -220,12 +228,18 @@ class RoastDashboardApp(App):
                 self.modbus_client = None
 
             # yeni client oluştur
-            client = ModbusTCPClient(
-                host=self.modbus_host,
-                port=self.modbus_port,
-                unit_id=self.modbus_unit_id,
-                timeout=self.modbus_timeout
-            )
+            if self.simulation:
+                client = ModbusSimClient(
+                    unit_id=self.modbus_unit_id,
+                    timeout=self.modbus_timeout
+                )
+            else:
+                client = ModbusTCPClient(
+                    host=self.modbus_host,
+                    port=self.modbus_port,
+                    unit_id=self.modbus_unit_id,
+                    timeout=self.modbus_timeout
+                )
 
             # bağlan
             ok = client.connect()
@@ -285,6 +299,7 @@ class RoastDashboardApp(App):
         Builder.load_file(resource_path("ui/make_profile.kv"))
         Builder.load_file(resource_path("ui/manual_control.kv"))
         Builder.load_file(resource_path("ui/profile_detail_screen.kv"))
+        Builder.load_file(resource_path("ui/settings.kv"))
 
         #Builder.load_file("ui/common.kv")
         #Builder.load_file("ui/home.kv")
@@ -302,6 +317,7 @@ class RoastDashboardApp(App):
         sm.add_widget(MakeProfileScreen(name="make_profile"))
         sm.add_widget(ManualControlScreen(name="manual"))
         sm.add_widget(ProfileDetailScreen(name="profile_detail"))
+        sm.add_widget(SettingsScreen(name="settings"))
 
         # ---------------- ✅ Modbus TCP Client ----------------
         self.connect_modbus()
@@ -313,7 +329,9 @@ class RoastDashboardApp(App):
         Window.bind(on_key_down=self._on_user_activity)
         self._idle_check_ev = Clock.schedule_interval(self._check_idle_timeout, 1.0)
 
-        if self.mqtt_config.get("broker"):
+        if self.simulation:
+            print("[App] SIMULATION mode: Modbus is simulated, MQTT skipped")
+        elif self.mqtt_config.get("broker"):
             self.mqtt = MQTTService(
                 broker=self.mqtt_config["broker"],
                 port=self.mqtt_config["port"],
