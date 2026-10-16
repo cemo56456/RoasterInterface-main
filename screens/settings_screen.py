@@ -16,7 +16,7 @@ class SettingsScreen(BaseRoasterScreen):
     services/i18n.py.
 
     Current rows:
-      - Roasting Profile Style (STD / DEV) -> MW615 + settings.json
+      - Roasting Profile Style (STD / DEV) -> MW615 (PLC stores it)
       - Language (tr / en)                 -> settings.json, app.lang
     """
 
@@ -109,8 +109,6 @@ class SettingsScreen(BaseRoasterScreen):
         if not self.can_apply:
             return
 
-        to_save = {}
-
         # ---- Roasting Profile Style -> PLC ----
         if self.selected_mode != self.current_mode:
             client = self._get_modbus_client()
@@ -133,16 +131,12 @@ class SettingsScreen(BaseRoasterScreen):
 
             self.current_mode = self.selected_mode
 
-        to_save["profile_mode"] = self.current_mode
+        # (Profil stili PLC'de saklanır, settings.json'a yazılmaz.)
 
-        # ---- Language ----
-        lang_changed = self.selected_lang != self.current_lang
-        to_save["language"] = self.selected_lang
-
-        # Disk'e kaydet (uygulama yeniden açılınca geri yüklenir)
-        ok, err = save_settings(to_save)
-
-        if lang_changed:
+        # ---- Language -> settings.json ----
+        ok, err = True, None
+        if self.selected_lang != self.current_lang:
+            ok, err = save_settings({"language": self.selected_lang})
             App.get_running_app().lang = self.selected_lang
             self.current_lang = self.selected_lang
 

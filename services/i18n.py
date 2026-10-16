@@ -19,8 +19,8 @@ STRINGS = {
         "sec_profile": "PROFILE",
         "profile_style": "Roasting Profile Style",
         "active_in_plc": "Active in PLC: {}",
-        "standard": "STANDARD",
-        "dev_time": "DEV TIME",
+        "standard": "STANDARD TYPE",
+        "dev_time": "DEVELOPMENT TYPE",
 
         "sec_general": "GENERAL",
         "language": "Language",
@@ -38,8 +38,8 @@ STRINGS = {
         "sec_profile": "PROFİL",
         "profile_style": "Kavurma Profil Stili",
         "active_in_plc": "PLC'de aktif: {}",
-        "standard": "STANDART",
-        "dev_time": "DEV SÜRESİ",
+        "standard": "STANDART TİP",
+        "dev_time": "DEVELOPMENT TİPİ",
 
         "sec_general": "GENEL",
         "language": "Dil",
