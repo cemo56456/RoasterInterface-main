@@ -34,6 +34,7 @@ from services.modbus_tcp_client import ModbusTCPClient
 from services.modbus_sim_client import ModbusSimClient
 from services.mqtt_service import MQTTService
 from services.config import load_config
+from services.app_settings import load_settings
 from widgets.status_anim import StatusAnim
 
 from kivy.uix.popup import Popup
@@ -103,6 +104,7 @@ class RoastDashboardApp(App):
         # Simülasyon: config.json'da "simulation": true veya ROASTER_SIM=1
         self.simulation = bool(config.get("simulation")) or os.environ.get("ROASTER_SIM") == "1"
 
+        self._saved_settings_applied = False
         self._modbus_watchdog_ev = None
         self.modbus_connected = False
         self._comm_blink_ev = None
@@ -264,6 +266,7 @@ class RoastDashboardApp(App):
                     self.modbus_client = None
                     return None
 
+                self._apply_saved_settings()
                 return self.modbus_client
 
 
@@ -282,6 +285,22 @@ class RoastDashboardApp(App):
             self.modbus_client = None
             return None
 
+
+    def _apply_saved_settings(self):
+        """
+        Pushes settings saved with Apply (settings.json) back to the PLC
+        once per app run, on the first successful connection.
+        """
+        if self._saved_settings_applied:
+            return
+        self._saved_settings_applied = True
+
+        saved = load_settings()
+        mode = saved.get("profile_mode")
+        if mode in ("standard", "dev"):
+            target = 1 if mode == "dev" else 0
+            ok, err = self.modbus_client.write_single_register(615, target)
+            print(f"[App] saved profile_mode={mode} -> MW615 ok={ok} err={err}")
 
     def reconnect_modbus(self):
         print("[App] reconnect_modbus called")

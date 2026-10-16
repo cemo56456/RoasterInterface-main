@@ -1,6 +1,7 @@
 from kivy.properties import StringProperty, BooleanProperty
 
 from screens.base_screen import BaseRoasterScreen
+from services.app_settings import save_settings
 
 
 class SettingsScreen(BaseRoasterScreen):
@@ -104,6 +105,13 @@ class SettingsScreen(BaseRoasterScreen):
                 live.last_read = f"MW{self.REG_PROFILE_MODE_WRITE} <= {target}"
 
             self.current_mode = self.selected_mode
+
+        # PLC'ye yazılanı diske de kaydet (uygulama yeniden açılınca geri yüklenir)
+        ok, err = save_settings({"profile_mode": self.current_mode})
+        if not ok:
+            self.last_msg = f"Applied, but could not save settings.json: {err}"
+            self._update_can_apply()
+            return
 
         self._update_can_apply()
         self.go_back()
