@@ -103,11 +103,10 @@
                 state: "down"
 
         # ---------------- 3x3 cards ----------------
+        # Yükseklik sabit değil: alt bölüm kadar yer ayrılır, kalan alanı kartlar doldurur
         GridLayout:
             cols: 3
             spacing: dp(12)
-            size_hint_y: None
-            height: dp(3)*dp(140) + dp(2)*dp(12)
 
             # =====================================================
             # Row 1
@@ -421,13 +420,14 @@
 
 
 
-        # ---------------- Bottom controls (unchanged) ----------------
+        # ---------------- Bottom controls ----------------
+        # Yüksekliği içeriği belirler (mesaj satırı + buton şeridi), kartlar kalan alanı alır
         BoxLayout:
             orientation: "vertical"
             padding: dp(14)
             spacing: dp(16)
-
-            Widget:
+            size_hint_y: None
+            height: self.minimum_height
 
             Label:
                 text: root.last_msg
