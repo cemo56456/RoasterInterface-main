@@ -119,9 +119,12 @@ class ManualControlScreen(BaseRoasterScreen):
         except Exception:
             pass
 
+    def _t(self, key):
+        return App.get_running_app().t(key)
+
     def _attach_client_from_live(self):
         self.client = self._get_modbus_client()
-        self.last_msg = "Client OK" if self.client else "Client yok"
+        self.last_msg = self._t("msg_client_ok") if self.client else self._t("msg_no_client")
 
     # =========================================================
     # polling
@@ -217,12 +220,12 @@ class ManualControlScreen(BaseRoasterScreen):
     # =========================================================
     def open_edit(self, target: str):
         if not self.client:
-            self.last_msg = "Client yok"
+            self.last_msg = self._t("msg_no_client")
             return
 
         # --- hangi alan, hangi register? ---
         if target == "set":
-            title = "Set Value (°C)"
+            title = self._t("edit_set_value")
             current = (self.set_text or "").replace("°C", "").strip()
             if not current:
                 current = "0,0"
@@ -231,28 +234,28 @@ class ManualControlScreen(BaseRoasterScreen):
             vmin, vmax = 0, 400
 
         elif target == "burner_pct":
-            title = "Burner (%)"
+            title = self._t("edit_burner")
             current = (self.burner_pct_text or "0%").replace("%", "").strip()
             reg = self.REG_BURNER_PCT
             scale_x10 = False
             vmin, vmax = 0, 100
 
         elif target == "exhaust_pct":
-            title = "Exhaust (%)"
+            title = self._t("edit_exhaust")
             current = (self.exhaust_pct_text or "0%").replace("%", "").strip()
             reg = self.REG_EXHAUST_PCT
             scale_x10 = False  # burada önemsiz; aşağıda özel çevireceğiz
             vmin, vmax = 0, 100
 
         elif target == "drum_pct":
-            title = "Drum (%)"
+            title = self._t("edit_drum")
             current = (self.drum_pct_text or "0%").replace("%", "").strip()
             reg = self.REG_DRUM_PCT
             scale_x10 = True
             vmin, vmax = 0, 100
 
         elif target == "cooling_time":
-            title = "Cooling Time (sec)"
+            title = self._t("edit_cooling_time")
             # mm:ss -> saniye çevirmeyelim, kullanıcı direkt saniye girsin
             current = "0"
             reg = self.REG_COOLING_TIME_SEC
@@ -260,14 +263,14 @@ class ManualControlScreen(BaseRoasterScreen):
             vmin, vmax = 0, 60 * 60
 
         elif target == "mixer_on":
-            title = "Mixer ON Time (sec)"
+            title = self._t("edit_mixer_on")
             current = "0"
             reg = self.REG_MIXER_ON_SEC
             scale_x10 = False
             vmin, vmax = 0, 60 * 60
 
         elif target == "mixer_off":
-            title = "Mixer OFF Time (sec)"
+            title = self._t("edit_mixer_off")
             current = "0"
             reg = self.REG_MIXER_OFF_SEC
             scale_x10 = False
@@ -315,7 +318,7 @@ class ManualControlScreen(BaseRoasterScreen):
     # =========================================================
     def _toggle_coil(self, coil_addr: int):
         if not self.client:
-            self.last_msg = "Client yok"
+            self.last_msg = self._t("msg_no_client")
             return
 
         # Hangi coil hangi status'a bağlı?
@@ -358,7 +361,7 @@ class ManualControlScreen(BaseRoasterScreen):
 
     def toggle_cooling(self):
         if not self.client:
-            self.last_msg = "Client yok"
+            self.last_msg = self._t("msg_no_client")
             return
 
         # Status MW3004'ten geliyor: 0/1
