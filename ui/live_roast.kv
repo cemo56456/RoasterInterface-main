@@ -64,7 +64,7 @@
                 on_release: root.manager.current = "manual"
 
             DarkTab:
-                text: "Make Profile"
+                text: app.t("tab_make_profile", app.lang)
                 tab_key: "make_profile"
                 font_size: FONT_LG
                 bold: True
@@ -87,7 +87,7 @@
                         radius: [dp(26), dp(26), dp(26), dp(26)]
 
             DarkTab:
-                text: "Profile"
+                text: app.t("tab_profile", app.lang)
                 tab_key: "profile"
                 font_size: FONT_LG
                 bold: True
@@ -120,7 +120,7 @@
 
                         # ---- SET VALUE ----
                         Label:
-                            text: "Set Value"
+                            text: app.t("live_set_value", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -142,7 +142,7 @@
 
                         # ---- BEAN TEMP ----
                         Label:
-                            text: "Bean Temp"
+                            text: app.t("live_bean_temp", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -163,7 +163,7 @@
 
                         # ---- ENV TEMP ----
                         Label:
-                            text: "Exhaust TEMP"
+                            text: app.t("live_exhaust_temp", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -213,7 +213,7 @@
                                     on_release: root.open_exhaust_speed_keypad()
 
                                 Label:
-                                    text: "Exhaust"
+                                    text: app.t("live_exhaust", app.lang)
                                     font_size: FONT_EMPH
                                     color: 1, 1, 1, 1
                                     halign: "center"
@@ -255,7 +255,7 @@
                                     on_release: root.open_burner_keypad()
 
                                 Label:
-                                    text: "Burner"
+                                    text: app.t("live_burner", app.lang)
                                     font_size: FONT_LG
                                     color: 1, 1, 1, 1
                                     halign: "center"
@@ -296,7 +296,7 @@
                                     text_size: self.size
 
                                 Label:
-                                    text: "Airflow"
+                                    text: app.t("live_airflow", app.lang)
                                     font_size: FONT_MD
                                     color: 1, 1, 1, 1
                                     halign: "center"

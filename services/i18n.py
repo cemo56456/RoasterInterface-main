@@ -64,6 +64,16 @@ STRINGS = {
 
         "msg_client_ok": "Connection ready",
         "msg_no_client": "No connection",
+
+        # ---- Live Roast (top tabs + left panel) ----
+        "tab_make_profile": "Make Profile",
+        "tab_profile": "Profile",
+        "live_set_value": "Set Value",
+        "live_bean_temp": "Bean Temp",
+        "live_exhaust_temp": "Exhaust TEMP",
+        "live_exhaust": "Exhaust",
+        "live_burner": "Burner",
+        "live_airflow": "Airflow",
     },
     "tr": {
         "back": "Geri",
@@ -118,6 +128,16 @@ STRINGS = {
 
         "msg_client_ok": "Bağlantı hazır",
         "msg_no_client": "Bağlantı yok",
+
+        # ---- Live Roast (top tabs + left panel) ----
+        "tab_make_profile": "Profil Oluştur",
+        "tab_profile": "Profil",
+        "live_set_value": "Ayar Değeri",
+        "live_bean_temp": "Çekirdek Sıcaklığı",
+        "live_exhaust_temp": "Egzoz Sıcaklığı",
+        "live_exhaust": "Egzoz",
+        "live_burner": "Brülör",
+        "live_airflow": "Hava Akışı",
     },
 }
 
