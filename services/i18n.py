@@ -74,6 +74,9 @@ STRINGS = {
         "live_exhaust": "Exhaust",
         "live_burner": "Burner",
         "live_airflow": "Airflow",
+
+        # ---- Home ----
+        "touch_to_start": "Touch to start",
     },
     "tr": {
         "back": "Geri",
@@ -138,6 +141,9 @@ STRINGS = {
         "live_exhaust": "Egzoz",
         "live_burner": "Brülör",
         "live_airflow": "Hava Akışı",
+
+        # ---- Home ----
+        "touch_to_start": "Başlamak için dokunun",
     },
 }
 

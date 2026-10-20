@@ -90,6 +90,7 @@ class RoastDashboardApp(App):
     # KV içinden okunuyor
     active_tab = StringProperty("home")
     home_icon = StringProperty("")
+    logo_path = StringProperty("")
 
     modbus_connected = BooleanProperty(False)
     comm_indicator_color = ListProperty([1, 0, 0, 1])
@@ -307,6 +308,7 @@ class RoastDashboardApp(App):
 
     def build(self):
         self.home_icon = resource_path("assets/icons/home.png")
+        self.logo_path = resource_path("assets/logo_rostek.png")
 
         # ---------------- KV dosyaları ----------------
         Builder.load_file(resource_path("ui/common.kv"))

@@ -6,6 +6,22 @@
 
 <HoldArea@ButtonBehavior+Widget>:
 
+# Logo, koyu zeminde okunsun diye beyaz yuvarlak köşeli bir kartın içinde durur.
+# Kartın ve altındaki yazının tamamı dokunulabilir (Live ekranına geçer).
+<StartArea@ButtonBehavior+BoxLayout>:
+    orientation: "vertical"
+    spacing: dp(18)
+
+<LogoCard@BoxLayout>:
+    padding: dp(40), dp(28)
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(30),]
+
 <HomeScreen>:
 
     BoxLayout:
@@ -20,42 +36,38 @@
                 pos: self.pos
                 size: self.size
 
+        # üstteki boşluk biraz daha küçük -> logo tam ortadan hafif yukarıda durur
         Widget:
-            size_hint_y: 1
+            size_hint_y: 0.9
 
-
-        BoxLayout:
+        AnchorLayout:
             size_hint_y: None
-            height: dp(180)
+            height: dp(290)
+            anchor_x: "center"
+            anchor_y: "center"
 
-            AnchorLayout:
-                anchor_x: "center"
-                anchor_y: "center"
+            StartArea:
+                size_hint: None, None
+                width: dp(640)
+                height: dp(290)
+                on_release: root.go_live()
 
-                BoxLayout:
-                    orientation: "horizontal"
-                    size_hint: None, None
-                    size: self.minimum_size
-                    spacing: dp(14)
+                # logo oranı 985x320 (~3.08:1) -> kart yüksekliği buna göre
+                LogoCard:
+                    size_hint_y: None
+                    height: dp(248)
 
-                    ClickLabel:
-                        text: "Sigma Coffee Roaster\nProfesional"
-                        font_size: FONT_DISPLAY
-                        bold: True
-                        color: 0.92, 0.94, 0.98, 1
-                        halign: "center"
-                        valign: "middle"
-                        text_size: None, None
-                        size_hint: None, None
-                        size: self.texture_size
-                        on_release: root.go_live()
+                    Image:
+                        source: app.logo_path
+                        fit_mode: "contain"
+                        mipmap: True
 
-                    StatusLed:
-                        size_hint: None, None
-                        size: dp(10), dp(10)
-                        pos_hint: {"center_y": 0.35}
-                        state: "on" if app.modbus_connected else "off"
-                        blink: True
+                Label:
+                    text: app.t("touch_to_start", app.lang)
+                    font_size: FONT_SM
+                    color: 0.55, 0.59, 0.66, 1
+                    size_hint_y: None
+                    height: dp(24)
 
         #BoxLayout:
         #    size_hint_y: None
@@ -72,7 +84,15 @@
         #        on_release: root.go_live()
 
         FloatLayout:
-            size_hint_y: 1
+            size_hint_y: 1.1
+
+            # PLC bağlantı LED'i (sol alt köşe)
+            StatusLed:
+                size_hint: None, None
+                size: dp(10), dp(10)
+                pos_hint: {"x": 0, "y": 0}
+                state: "on" if app.modbus_connected else "off"
+                blink: True
 
             HoldArea:
                 size_hint: None, None
