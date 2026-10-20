@@ -38,6 +38,7 @@ from services.app_settings import load_settings
 from services.i18n import translate, DEFAULT_LANG, LANGUAGES
 from widgets.status_anim import StatusAnim
 from widgets.flags import FlagTR, FlagEN
+from widgets.icons import HomeIcon
 
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
@@ -72,6 +73,7 @@ Factory.register("BarGauge", cls=BarGauge)
 Factory.register("StatusLed", cls=StatusLed)
 Factory.register("FlagTR", cls=FlagTR)
 Factory.register("FlagEN", cls=FlagEN)
+Factory.register("HomeIcon", cls=HomeIcon)
 
 # ---- Window ----
 Window.size = (1280, 800)

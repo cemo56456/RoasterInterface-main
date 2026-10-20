@@ -910,7 +910,7 @@ class MakeProfileScreen(BaseRoasterScreen):
             pop.dismiss()
 
         btn_back = Button(
-            text="⟵ Back",
+            text="<  " + App.get_running_app().t("back"),
             size_hint=(None, 1),
             width=dp(220),
             font_size="22sp",

@@ -41,16 +41,22 @@
                 width: dp(150)
                 on_release: root.manager.current = "home"
 
-                Image:
-                    source: app.home_icon
-                    #source: "assets/icons/home.png"
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
+                HomeIcon:
+                    pos: self.parent.pos
+                    size: self.parent.size
                     size_hint: None, None
-                    size: dp(28), dp(28)
+                    scale: 0.5
+
+                # Eski renkli PNG ikon (istersen geri dön):
+                #Image:
+                #    source: app.home_icon
+                #    center_x: self.parent.center_x
+                #    center_y: self.parent.center_y
+                #    size_hint: None, None
+                #    size: dp(28), dp(28)
 
             DarkTab:
-                text: "Manuel Control"
+                text: app.t("manual_control", app.lang)
                 tab_key: "manual"
                 font_size: FONT_LG
                 bold: True
