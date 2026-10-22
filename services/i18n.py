@@ -75,6 +75,20 @@ STRINGS = {
         "live_burner": "Burner",
         "live_airflow": "Airflow",
 
+        # ---- Live Roast: PROFILE table on the plot ----
+        "pt_profile": "PROFILE",
+        "pt_temperature": "Temperature",
+        "pt_exhaust": "Exhaust",
+        "pt_flame": "Flame",
+        "pt_drop_down": "Drop Down Temp",
+        "pt_hopper_open": "Hopper Open Time",
+        "pt_chaffing": "Chaffing (sec)",
+        "pt_chaffing_time": "Chaffing Time (sec)",
+        "pt_first_crack": "First Crack Temp",
+        "pt_second_crack": "Second Crack Temp",
+        "pt_dev_time": "Development Time",
+        "pt_drop_out": "DROP OUT TEMP",
+
         # ---- Home ----
         "touch_to_start": "Touch to start",
     },
@@ -141,6 +155,21 @@ STRINGS = {
         "live_exhaust": "Egzoz",
         "live_burner": "Brülör",
         "live_airflow": "Hava Akışı",
+
+        # ---- Live Roast: PROFILE table on the plot ----
+        "pt_profile": "PROFİL",
+        "pt_temperature": "Sıcaklık",
+        "pt_exhaust": "Egzoz",
+        "pt_flame": "Alev",
+        # Sütun dar: "Sıcaklık" zaten sütun başlığında, satırlarda tekrar yazılmıyor
+        "pt_drop_down": "Kavurma",
+        "pt_hopper_open": "Kefe Açık Süresi",
+        "pt_chaffing": "Kepek Ayırma (sn)",
+        "pt_chaffing_time": "Kepek Süresi (sn)",
+        "pt_first_crack": "Birinci Çatlama",
+        "pt_second_crack": "İkinci Çatlama",
+        "pt_dev_time": "Gelişim Süresi",
+        "pt_drop_out": "BİTİŞ DERECESİ",
 
         # ---- Home ----
         "touch_to_start": "Başlamak için dokunun",
