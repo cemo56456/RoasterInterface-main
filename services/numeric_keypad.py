@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -5,6 +6,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.metrics import dp
 from kivy.graphics import Color, RoundedRectangle
+
+
+def _tr(key):
+    return App.get_running_app().t(key)
 
 
 # ---------------------------------------------------------
@@ -54,7 +59,7 @@ class NumericKeypadPopup(Popup):
 
     def __init__(
         self,
-        title="Enter value",
+        title=None,
         initial_text="",
         max_decimals=1,
         min_value=None,
@@ -73,7 +78,7 @@ class NumericKeypadPopup(Popup):
         self.background = ""
         self.background_color = (0, 0, 0, 0)  # transparent
 
-        self._hdr_title = title
+        self._hdr_title = title if title is not None else _tr("kp_enter_value")
 
         self._s = (initial_text or "").strip()
         self._max_decimals = int(max_decimals)
@@ -155,9 +160,16 @@ class NumericKeypadPopup(Popup):
             "CANCEL", "CLEAR", "OK",
         ]
 
+        # tuşun işlevi k ile belirlenir, ekranda görünen yazı çevrilir
+        key_labels = {
+            "CANCEL": _tr("kp_cancel"),
+            "CLEAR": _tr("kp_clear"),
+            "OK": _tr("kp_ok"),
+        }
+
         for k in keys:
             b = RoundedKeyButton(
-                text=k,
+                text=key_labels.get(k, k),
                 radius_dp=16,
                 font_size="40sp" if fullscreen else "24sp",
                 bold=True,  # ✅ all bold (including CANCEL/CLEAR/OK)

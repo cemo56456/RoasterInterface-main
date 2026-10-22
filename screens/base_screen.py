@@ -29,6 +29,12 @@ class BaseRoasterScreen(Screen):
             pass
 
     # ---------------------------------------------------------
+    # Translation shortcut (services/i18n.py)
+    # ---------------------------------------------------------
+    def _t(self, key):
+        return App.get_running_app().t(key)
+
+    # ---------------------------------------------------------
     # Modbus client lookup
     # ---------------------------------------------------------
     def _get_modbus_client(self):

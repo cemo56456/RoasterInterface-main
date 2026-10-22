@@ -83,7 +83,7 @@
                 on_release: root.exit_screen()
 
             DarkTab:
-                text: root.title_text if root.title_text else "Profile"
+                text: root.title_text if root.title_text else app.t("tab_profile", app.lang)
                 font_size: FONT_LG
                 bold: True
                 color: 1, 1, 1, 1
@@ -115,12 +115,12 @@
                         row_force_default: True
 
                         RowTitle:
-                            text: "Profile Name"
+                            text: app.t("profile_name", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
                         NameBox:
-                            text: root.profile_name if root.profile_name else "<tap to enter name>"
+                            text: root.profile_name if root.profile_name else app.t("tap_name_hint", app.lang)
                             size_hint_x: None
                             width: dp(520)
                             on_release: root.open_name_keypad()
@@ -138,12 +138,12 @@
                         row_force_default: True
 
                         RowTitle:
-                            text: "Coffee Origin"
+                            text: app.t("coffee_origin", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
                         NameBox:
-                            text: root.coffee_origin if root.coffee_origin else "<tap to select origin>"
+                            text: root.coffee_origin if root.coffee_origin else app.t("tap_origin_hint", app.lang)
                             size_hint_x: None
                             width: dp(380)
                             on_release: root.open_origin_picker()
@@ -176,7 +176,7 @@
                             width: dp(240)
 
                         RowTitle:
-                            text: "Temperature"
+                            text: app.t("pt_temperature", app.lang)
                             size_hint_x: None
                             width: dp(160)
                             halign: "center"
@@ -187,7 +187,7 @@
                             width: dp(60)
 
                         RowTitle:
-                            text: "Exhaust"
+                            text: app.t("pt_exhaust", app.lang)
                             size_hint_x: None
                             width: dp(120)
                             halign: "center"
@@ -198,7 +198,7 @@
                             width: dp(30)
 
                         RowTitle:
-                            text: "Flame"
+                            text: app.t("pt_flame", app.lang)
                             size_hint_x: None
                             width: dp(120)
                             halign: "center"
@@ -214,7 +214,7 @@
 
                         # ROW 1
                         RowTitle:
-                            text: "Drop Down Temp"
+                            text: app.t("pt_drop_down", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
@@ -222,7 +222,7 @@
                             text: root.drop_down_temp
                             size_hint_x: None
                             width: dp(160)
-                            on_release: root.open_numeric("drop_down_temp", "Drop Down Temp (°C)", 1, 0, 400)
+                            on_release: root.open_numeric("drop_down_temp", app.t("kt_drop_down_temp", app.lang), 1, 0, 400)
 
                         UnitLabel:
                             text: "°C"
@@ -233,7 +233,7 @@
                             text: root.dd_p1
                             size_hint_x: None
                             width: dp(120)
-                            on_release: root.open_numeric("dd_p1", "Drop Down Exhaust (%)", 0, 0, 100)
+                            on_release: root.open_numeric("dd_p1", app.t("kt_drop_down_exh", app.lang), 0, 0, 100)
 
                         UnitLabel:
                             text: "%"
@@ -244,7 +244,7 @@
                             text: root.dd_p2
                             size_hint_x: None
                             width: dp(120)
-                            on_release: root.open_numeric("dd_p2", "Drop Down Flame (%)", 0, 0, 100)
+                            on_release: root.open_numeric("dd_p2", app.t("kt_drop_down_flm", app.lang), 0, 0, 100)
 
                         UnitLabel:
                             text: "%"
@@ -256,7 +256,7 @@
 
                         # ROW 2
                         RowTitle:
-                            text: "Hopper Open Time"
+                            text: app.t("pt_hopper_open", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
@@ -267,7 +267,7 @@
                             on_release: root.open_numeric("hopper_open_time", "Hopper Open Time (sec.)", 0, 0, 999)
 
                         UnitLabel:
-                            text: "sec."
+                            text: app.t("sec", app.lang)
                             size_hint_x: None
                             width: dp(60)
 
@@ -298,7 +298,7 @@
 
                         # ROW 3
                         RowTitle:
-                            text: "Chaffing"
+                            text: app.t("mp_chaffing", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
@@ -309,7 +309,7 @@
                             on_release: root.open_numeric("chaffing", "Chaffing (sec.)", 0, 0, 999)
 
                         UnitLabel:
-                            text: "sec."
+                            text: app.t("sec", app.lang)
                             size_hint_x: None
                             width: dp(60)
 
@@ -340,7 +340,7 @@
 
                         # ROW 4
                         RowTitle:
-                            text: "Chaffing Time"
+                            text: app.t("mp_chaffing_time", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
@@ -351,7 +351,7 @@
                             on_release: root.open_numeric("chaffing_time", "Chaffing Time (sec.)", 0, 0, 999)
 
                         UnitLabel:
-                            text: "sec."
+                            text: app.t("sec", app.lang)
                             size_hint_x: None
                             width: dp(60)
 
@@ -393,7 +393,7 @@
 
                         # ROW 5
                         RowTitle:
-                            text: "First Crack Temp"
+                            text: app.t("pt_first_crack", app.lang)
                             size_hint_x: None
                             width: dp(240)
 
@@ -401,7 +401,7 @@
                             text: root.first_crack_temp
                             size_hint_x: None
                             width: dp(160)
-                            on_release: root.open_numeric("first_crack_temp", "First Crack Temp (°C)", 1, 0, 400)
+                            on_release: root.open_numeric("first_crack_temp", app.t("kt_fc_temp", app.lang), 1, 0, 400)
 
                         UnitLabel:
                             text: "°C"
@@ -412,7 +412,7 @@
                             text: root.fc_p1
                             size_hint_x: None
                             width: dp(120)
-                            on_release: root.open_numeric("fc_p1", "First Crack Exhaust (%)  MW592", 0, 0, 100)
+                            on_release: root.open_numeric("fc_p1", app.t("kt_fc_exh", app.lang), 0, 0, 100)
 
                         UnitLabel:
                             text: "%"
@@ -424,7 +424,7 @@
                             text: root.fc_p2
                             size_hint_x: None
                             width: dp(120)
-                            on_release: root.open_numeric("fc_p2", "First Crack Flame (%)", 0, 0, 100)
+                            on_release: root.open_numeric("fc_p2", app.t("kt_fc_flm", app.lang), 0, 0, 100)
 
                         UnitLabel:
                             text: "%"
@@ -459,7 +459,7 @@
 
                             # ROW 6 (Second Crack)
                             RowTitle:
-                                text: "Second Crack Temp"
+                                text: app.t("pt_second_crack", app.lang)
                                 size_hint_x: None
                                 width: dp(240)
 
@@ -467,7 +467,7 @@
                                 text: root.second_crack_temp
                                 size_hint_x: None
                                 width: dp(160)
-                                on_release: root.open_numeric("second_crack_temp", "Second Crack Temp (°C)", 1, 0, 400)
+                                on_release: root.open_numeric("second_crack_temp", app.t("kt_sc_temp", app.lang), 1, 0, 400)
 
                             UnitLabel:
                                 text: "°C"
@@ -478,7 +478,7 @@
                                 text: root.sc_p1
                                 size_hint_x: None
                                 width: dp(120)
-                                on_release: root.open_numeric("sc_p1", "Second Crack Exhaust (%)", 0, 0, 100)
+                                on_release: root.open_numeric("sc_p1", app.t("kt_sc_exh", app.lang), 0, 0, 100)
 
                             UnitLabel:
                                 text: "%"
@@ -490,7 +490,7 @@
                                 text: root.sc_p2
                                 size_hint_x: None
                                 width: dp(120)
-                                on_release: root.open_numeric("sc_p2", "Second Crack Flame (%)", 0, 0, 100)
+                                on_release: root.open_numeric("sc_p2", app.t("kt_sc_flm", app.lang), 0, 0, 100)
 
                             UnitLabel:
                                 text: "%"
@@ -502,7 +502,7 @@
 
                             # ROW 7 (Drop Out)
                             RowTitle:
-                                text: "DROP OUT TEMP"
+                                text: app.t("pt_drop_out", app.lang)
                                 size_hint_x: None
                                 width: dp(240)
 
@@ -510,7 +510,7 @@
                                 text: root.drop_out_temp
                                 size_hint_x: None
                                 width: dp(160)
-                                on_release: root.open_numeric("drop_out_temp", "DROP OUT TEMP (°C)", 1, 0, 400)
+                                on_release: root.open_numeric("drop_out_temp", app.t("kt_do_temp", app.lang), 1, 0, 400)
 
                             UnitLabel:
                                 text: "°C"
@@ -521,7 +521,7 @@
                                 text: root.do_p1
                                 size_hint_x: None
                                 width: dp(120)
-                                on_release: root.open_numeric("do_p1", "Drop Out Exhaust (%)", 0, 0, 100)
+                                on_release: root.open_numeric("do_p1", app.t("kt_do_exh", app.lang), 0, 0, 100)
 
                             UnitLabel:
                                 text: "%"
@@ -533,7 +533,7 @@
                                 text: root.do_p2
                                 size_hint_x: None
                                 width: dp(120)
-                                on_release: root.open_numeric("do_p2", "Drop Out Flame (%)", 0, 0, 100)
+                                on_release: root.open_numeric("do_p2", app.t("kt_do_flm", app.lang), 0, 0, 100)
 
                             UnitLabel:
                                 text: "%"
@@ -561,7 +561,7 @@
                             disabled: True if root.profile_mode != "dev" else False
 
                             RowTitle:
-                                text: "Development Time"
+                                text: app.t("pt_dev_time", app.lang)
                                 size_hint_x: None
                                 width: dp(240)
 
@@ -572,7 +572,7 @@
                                 on_release: root.open_dev_min()
 
                             UnitLabel:
-                                text: "min"
+                                text: app.t("unit_min", app.lang)
                                 size_hint_x: None
                                 width: dp(60)
 
@@ -583,7 +583,7 @@
                                 on_release: root.open_dev_sec()
 
                             UnitLabel:
-                                text: "sec"
+                                text: app.t("sec", app.lang)
                                 size_hint_x: None
                                 width: dp(30)
 
@@ -628,7 +628,7 @@
                             spacing: dp(10)
 
                             Button:
-                                text: "Traditional"
+                                text: app.t("mode_traditional", app.lang)
                                 size_hint_x: None
 
                                 width: 0 if root.mode_buttons_height == 0 else dp(150)
@@ -645,7 +645,7 @@
                                 on_release: root.set_profile_mode("standard")
 
                             Button:
-                                text: "Development"
+                                text: app.t("mode_development", app.lang)
                                 size_hint_x: None
 
                                 width: 0 if root.mode_buttons_height == 0 else dp(150)
@@ -685,7 +685,7 @@
                         y: self.parent.y + dp(34)
 
                         DarkTab:
-                            text: "Send To PLC"
+                            text: app.t("send_to_plc", app.lang)
                             size_hint_y: None
                             height: dp(60)
                             font_size: FONT_EMPH
@@ -693,7 +693,7 @@
                             on_release: root.confirm_send_to_plc()
 
                         DarkTab:
-                            text: "Save"
+                            text: app.t("save", app.lang)
                             size_hint_y: None
                             height: dp(60)
                             font_size: FONT_EMPH
@@ -701,7 +701,7 @@
                             on_release: root.save_profile()
 
                         DarkTab:
-                            text: "Exit"
+                            text: app.t("exit", app.lang)
                             size_hint_y: None
                             height: dp(60)
                             font_size: FONT_EMPH

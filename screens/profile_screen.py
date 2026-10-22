@@ -110,7 +110,7 @@ class ProfileScreen(BaseRoasterScreen):
     def enter_make_profile_mode(self):
         self.make_profile_mode = True
         self.current_folder = ""
-        self.top_title = "SELECT FOLDER"
+        self.top_title = self._t("top_select_folder")
         self.show_folders()
 
     # ---------------------------------------------------------
@@ -270,9 +270,9 @@ class ProfileScreen(BaseRoasterScreen):
 
         from kivy.factory import Factory
 
-        b_rename = Factory.RoundedPopupButton(text="Rename")
-        b_delete = Factory.RoundedPopupButton(text="Delete")
-        b_cancel = Factory.RoundedPopupButton(text="Cancel")
+        b_rename = Factory.RoundedPopupButton(text=self._t("btn_rename"))
+        b_delete = Factory.RoundedPopupButton(text=self._t("btn_delete"))
+        b_cancel = Factory.RoundedPopupButton(text=self._t("popup_cancel"))
 
         inner.add_widget(b_rename)
         inner.add_widget(b_delete)
@@ -293,14 +293,14 @@ class ProfileScreen(BaseRoasterScreen):
                 dst = self._folder_path(new_name)
 
                 if dst.exists():
-                    self._toast("Target name already exists")
+                    self._toast(self._t("toast_name_exists"))
                     return
 
                 try:
                     src.rename(dst)
                     self.show_folders()
                 except Exception as e:
-                    self._toast(f"Rename failed: {e}")
+                    self._toast(self._t("toast_rename_failed").format(err=e))
 
             self._open_text_keypad("Rename Folder", folder_name, _rename_to)
 
@@ -324,7 +324,7 @@ class ProfileScreen(BaseRoasterScreen):
         inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
 
         msg = Label(
-            text="Delete folder?",
+            text=self._t("confirm_delete_folder"),
             font_size="20sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -352,8 +352,8 @@ class ProfileScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(10)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_no = Factory.RoundedPopupButtonSmall(text="No")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
+        b_no = Factory.RoundedPopupButtonSmall(text=self._t("popup_no"))
+        b_yes = Factory.RoundedPopupButtonSmall(text=self._t("popup_yes"))
         row.add_widget(b_no)
         row.add_widget(b_yes)
         inner.add_widget(row)
@@ -369,7 +369,7 @@ class ProfileScreen(BaseRoasterScreen):
                 shutil.rmtree(self._folder_path(folder_name))
                 self.show_folders()
             except Exception as e:
-                self._toast(f"Delete failed: {e}")
+                self._toast(self._t("toast_delete_failed").format(err=e))
 
         b_yes.bind(on_release=_yes)
         pop.open()
@@ -379,7 +379,7 @@ class ProfileScreen(BaseRoasterScreen):
     # ---------------------------------------------------------
     def show_folders(self):
         self.current_folder = ""
-        self.top_title = "SELECT FOLDER" if self.make_profile_mode else "PROFILE"
+        self.top_title = self._t("top_select_folder") if self.make_profile_mode else self._t("sec_profile")
 
         grid = self._grid()
         if not grid:
@@ -425,14 +425,14 @@ class ProfileScreen(BaseRoasterScreen):
 
             fdir = self._folder_path(name)
             if fdir.exists():
-                self._toast(f"Folder exists: {name}")
+                self._toast(self._t("toast_folder_exists").format(name=name))
                 return
 
             try:
                 fdir.mkdir(parents=True, exist_ok=False)
                 self.show_folders()
             except Exception as e:
-                self._toast(f"Create failed: {e}")
+                self._toast(self._t("toast_create_failed").format(err=e))
 
         self._open_text_keypad("New Folder Name", "", _create_folder)
 
@@ -447,7 +447,7 @@ class ProfileScreen(BaseRoasterScreen):
     # ---------------------------------------------------------
     def show_files(self, folder_name: str):
         self.current_folder = folder_name
-        self.top_title = folder_name if not self.make_profile_mode else f"SELECT SLOT: {folder_name}"
+        self.top_title = folder_name if not self.make_profile_mode else self._t("top_select_slot").format(name=folder_name)
 
         grid = self._grid()
         if not grid:
@@ -482,7 +482,7 @@ class ProfileScreen(BaseRoasterScreen):
     def _file_clicked(self, tile: FolderTile):
         # ✅ Make Profile modunda dolu profile'a girilmez
         if self.make_profile_mode:
-            self._toast("Only empty slots can be used to create a new profile.")
+            self._toast(self._t("toast_only_empty"))
             return
 
         folder_name = self.current_folder
@@ -492,7 +492,7 @@ class ProfileScreen(BaseRoasterScreen):
         try:
             data = json.loads(fpath.read_text(encoding="utf-8"))
         except Exception as e:
-            self._toast(f"JSON read error: {e}")
+            self._toast(self._t("toast_json_error").format(err=e))
             data = {}
 
         try:
@@ -524,7 +524,7 @@ class ProfileScreen(BaseRoasterScreen):
             fpath = self._profile_path(folder_name, pname)
 
             if fpath.exists():
-                self._toast(f"Profile exists: {pname}")
+                self._toast(self._t("toast_profile_exists").format(name=pname))
                 return
 
             try:
@@ -537,7 +537,7 @@ class ProfileScreen(BaseRoasterScreen):
                     # moddan çık
                     self.make_profile_mode = False
                     self.current_folder = ""
-                    self.top_title = "PROFILE"
+                    self.top_title = self._t("sec_profile")
 
                     # MakeProfile ekranına seçimi aktar
                     try:
@@ -582,7 +582,7 @@ class ProfileScreen(BaseRoasterScreen):
                     self._toast(f"profile_detail open failed: {e}")
 
             except Exception as e:
-                self._toast(f"Create failed: {e}")
+                self._toast(self._t("toast_create_failed").format(err=e))
 
         self._open_text_keypad("New Profile Name", "", _create_profile)
 
@@ -614,9 +614,9 @@ class ProfileScreen(BaseRoasterScreen):
         title.bind(size=lambda w, *_: setattr(w, "text_size", w.size))
         inner.add_widget(title)
 
-        b_rename = Factory.RoundedPopupButton(text="Rename")
-        b_delete = Factory.RoundedPopupButton(text="Delete")
-        b_cancel = Factory.RoundedPopupButton(text="Cancel")
+        b_rename = Factory.RoundedPopupButton(text=self._t("btn_rename"))
+        b_delete = Factory.RoundedPopupButton(text=self._t("btn_delete"))
+        b_cancel = Factory.RoundedPopupButton(text=self._t("popup_cancel"))
 
         inner.add_widget(b_rename)
         inner.add_widget(b_delete)
@@ -637,14 +637,14 @@ class ProfileScreen(BaseRoasterScreen):
                 dst = self._profile_path(folder_name, new_name)
 
                 if dst.exists():
-                    self._toast("Target name already exists")
+                    self._toast(self._t("toast_name_exists"))
                     return
 
                 try:
                     src.rename(dst)
                     self.show_files(folder_name)
                 except Exception as e:
-                    self._toast(f"Rename failed: {e}")
+                    self._toast(self._t("toast_rename_failed").format(err=e))
 
             self._open_text_keypad("Rename Profile", profile_name, _rename_to)
 
@@ -664,7 +664,7 @@ class ProfileScreen(BaseRoasterScreen):
         inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
 
         msg = Label(
-            text="Delete profile?",
+            text=self._t("confirm_delete_profile"),
             font_size="20sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -692,8 +692,8 @@ class ProfileScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(10)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_no = Factory.RoundedPopupButtonSmall(text="No")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
+        b_no = Factory.RoundedPopupButtonSmall(text=self._t("popup_no"))
+        b_yes = Factory.RoundedPopupButtonSmall(text=self._t("popup_yes"))
         row.add_widget(b_no)
         row.add_widget(b_yes)
         inner.add_widget(row)
@@ -711,7 +711,7 @@ class ProfileScreen(BaseRoasterScreen):
                     fpath.unlink()
                 self.show_files(folder_name)
             except Exception as e:
-                self._toast(f"Delete failed: {e}")
+                self._toast(self._t("toast_delete_failed").format(err=e))
 
         b_yes.bind(on_release=_yes)
         pop.open()
@@ -728,7 +728,7 @@ class ProfileScreen(BaseRoasterScreen):
         # root seviyedeysek hangi modda olursa olsun live'a dön
         self.make_profile_mode = False
         self.current_folder = ""
-        self.top_title = "PROFILE"
+        self.top_title = self._t("sec_profile")
         self._keep_mode = False
         self._keep_folder = ""
 

@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -7,6 +8,10 @@ from kivy.uix.textinput import TextInput
 from kivy.metrics import dp
 from kivy.clock import Clock
 from kivy.graphics import Color, RoundedRectangle
+
+
+def _tr(key):
+    return App.get_running_app().t(key)
 
 
 # ---------------------------------------------------------
@@ -73,7 +78,7 @@ class TextKeypadPopup(Popup):
 
     def __init__(
         self,
-        title="Enter Text",
+        title=None,
         initial_text="",
         max_len=24,
         on_ok=None,
@@ -90,7 +95,7 @@ class TextKeypadPopup(Popup):
         self.background = ""
         self.background_color = (0, 0, 0, 0)
 
-        self._hdr_title = title
+        self._hdr_title = title if title is not None else _tr("kp_enter_text")
         self._on_ok = on_ok
         self._on_cancel = on_cancel
         self._max_len = int(max_len) if max_len else 999
@@ -168,8 +173,8 @@ class TextKeypadPopup(Popup):
             spacing=dp(12),
         )
 
-        self._btn_cancel = RoundedKeyButton(text="CANCEL", font_size="30sp" if fullscreen else "18sp", bold=True)
-        self._btn_ok = RoundedKeyButton(text="OK", font_size="30sp" if fullscreen else "18sp", bold=True)
+        self._btn_cancel = RoundedKeyButton(text=_tr("kp_cancel"), font_size="30sp" if fullscreen else "18sp", bold=True)
+        self._btn_ok = RoundedKeyButton(text=_tr("kp_ok"), font_size="30sp" if fullscreen else "18sp", bold=True)
 
         # on_release is OK now, because we consume touch (no click-through)
         self._btn_cancel.bind(on_release=lambda *_: self._cancel())
@@ -197,9 +202,9 @@ class TextKeypadPopup(Popup):
         fn = BoxLayout(size_hint_y=None, height=dp(78) if fullscreen else dp(48), spacing=dp(10))
 
         self._btn_shift = RoundedKeyButton(text="SHIFT", font_size="24sp" if fullscreen else "18sp", bold=True)
-        btn_space = RoundedKeyButton(text="SPACE", font_size="24sp" if fullscreen else "18sp", bold=True)
+        btn_space = RoundedKeyButton(text=_tr("kp_space"), font_size="24sp" if fullscreen else "18sp", bold=True)
         btn_back = RoundedKeyButton(text="⌫", font_size="30sp" if fullscreen else "18sp", bold=True)
-        btn_clear = RoundedKeyButton(text="CLEAR", font_size="24sp" if fullscreen else "18sp", bold=True)
+        btn_clear = RoundedKeyButton(text=_tr("kp_clear"), font_size="24sp" if fullscreen else "18sp", bold=True)
         btn_dash = RoundedKeyButton(text="-", font_size="28sp" if fullscreen else "18sp", bold=True)
         btn_us = RoundedKeyButton(text="_", font_size="28sp" if fullscreen else "18sp", bold=True)
 

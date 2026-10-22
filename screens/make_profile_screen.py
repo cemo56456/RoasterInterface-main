@@ -799,10 +799,10 @@ class MakeProfileScreen(BaseRoasterScreen):
 
     # ✅ DEV TIME popup'ları (ProfileDetailScreen mantığı)
     def open_dev_min(self):
-        self._open_dev_field("dev_time_min", "Development Time (min)", 0, 0, 99)
+        self._open_dev_field("dev_time_min", self._t("mp_dev_min_title"), 0, 0, 99)
 
     def open_dev_sec(self):
-        self._open_dev_field("dev_time_sec", "Development Time (sec)", 0, 0, 59)
+        self._open_dev_field("dev_time_sec", self._t("mp_dev_sec_title"), 0, 0, 59)
 
     def _open_dev_field(self, field_name: str, title: str, decimals: int, vmin: int, vmax: int):
         # popup açıkken sync ezmesin
@@ -871,7 +871,7 @@ class MakeProfileScreen(BaseRoasterScreen):
         origin_dir.mkdir(parents=True, exist_ok=True)
         items = sorted(origin_dir.glob("*.png"))
         if not items:
-            self._toast("No origin png found in assets/origin/")
+            self._toast(self._t("toast_no_origin"))
             return
 
         from kivy.uix.scrollview import ScrollView
@@ -921,7 +921,7 @@ class MakeProfileScreen(BaseRoasterScreen):
         btn_back.bind(on_release=lambda *_: pop.dismiss())
 
         title = Label(
-            text="Select Coffee Origin",
+            text=self._t("select_origin"),
             font_size="22sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -1000,8 +1000,8 @@ class MakeProfileScreen(BaseRoasterScreen):
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
         from kivy.factory import Factory
-        b_no = Factory.RoundedPopupButtonSmall(text="No")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
+        b_no = Factory.RoundedPopupButtonSmall(text=self._t("popup_no"))
+        b_yes = Factory.RoundedPopupButtonSmall(text=self._t("popup_yes"))
         row.add_widget(b_no)
         row.add_widget(b_yes)
         inner.add_widget(row)
@@ -1063,10 +1063,10 @@ class MakeProfileScreen(BaseRoasterScreen):
                 self._write_reg_safe(client, self.MW_MP_STATE, 2)
                 self._write_reg_safe(client, self.MW_DD_DONE, 1)
 
-            self._toast("Drop Down saved.")
+            self._toast(self._t("toast_drop_down_saved"))
             self._poll_tick(0)
 
-        self._confirm("Are you sure you dropped down the coffee?" + self._live_summary(), _yes)
+        self._confirm(self._t("confirm_drop_down") + self._live_summary(), _yes)
 
     def on_first_crack_stage(self):
         if self.fc_done == 1 or self.fc_disabled:
@@ -1088,10 +1088,10 @@ class MakeProfileScreen(BaseRoasterScreen):
                 self._write_reg_safe(client, self.MW_MP_STATE, 3)
                 self._write_reg_safe(client, self.MW_FC_DONE, 1)
 
-            self._toast("First Crack saved.")
+            self._toast(self._t("toast_first_crack_saved"))
             self._poll_tick(0)
 
-        self._confirm("Are you sure the first crack has occurred?" + self._live_summary(), _yes)
+        self._confirm(self._t("confirm_first_crack") + self._live_summary(), _yes)
 
     def on_second_crack_stage(self):
         print("=== SECOND CRACK CLICKED ===")
@@ -1117,10 +1117,10 @@ class MakeProfileScreen(BaseRoasterScreen):
                 self._write_reg_safe(client, self.MW_MP_STATE, 4)
                 self._write_reg_safe(client, self.MW_SC_DONE, 1)
 
-            self._toast("Second Crack saved.")
+            self._toast(self._t("toast_second_crack_saved"))
             self._poll_tick(0)
 
-        self._confirm("Are you sure the second crack has occurred?" + self._live_summary(), _yes)
+        self._confirm(self._t("confirm_second_crack") + self._live_summary(), _yes)
 
     def on_drop_out_stage(self):
         if self.do_done == 1 or self.do_disabled:
@@ -1158,26 +1158,26 @@ class MakeProfileScreen(BaseRoasterScreen):
 
             # ✅ BURASI DEGISTI
             self._confirm(
-                "Drop Out saved.",
+                self._t("toast_drop_out_saved"),
                 lambda: self._confirm(
-                    "Do You Want to Run Cooling Process ?",
+                    self._t("confirm_cooling"),
                     lambda: self._run_cooling_process()
                 )
             )
 
             self._poll_tick(0)
 
-        self._confirm("Are you sure you dropped out the coffee?" + self._live_summary(), _yes)
+        self._confirm(self._t("confirm_drop_out") + self._live_summary(), _yes)
 
 
     def _run_cooling_process(self):
         client = self._get_modbus_client()
         if not client:
-            self._toast("Cooling command failed")
+            self._toast(self._t("toast_cooling_failed"))
             return
 
         self._write_reg_safe(client, self.REG_COOLING_CMD, 1)
-        self._toast("Cooling started")
+        self._toast(self._t("toast_cooling_started"))
 
     def save_make_profile(self):
         name = self._sanitize_name(self.selected_profile) or "Profile"
@@ -1240,11 +1240,11 @@ class MakeProfileScreen(BaseRoasterScreen):
             fpath.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
             self.selected_path = str(fpath)
             short_path = f"{fpath.parent.name} / {fpath.name}"
-            self._toast(f"Profile saved.\n\n{short_path}")
+            self._toast(self._t("toast_profile_saved").format(path=short_path))
             print(f"[MakeProfile] SAVED -> {fpath}")
         except Exception as e:
             print("[MakeProfile] save error:", e)
-            self._toast("Save error!")
+            self._toast(self._t("toast_save_error"))
 
 
 
@@ -1305,11 +1305,11 @@ class MakeProfileScreen(BaseRoasterScreen):
             fpath.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
             self.selected_path = str(fpath)
             short_path = f"{fpath.parent.name} / {fpath.name}"
-            self._toast(f"Profile saved.\n\n{short_path}")
+            self._toast(self._t("toast_profile_saved").format(path=short_path))
             print(f"[MakeProfile] SAVED -> {fpath}")
         except Exception as e:
             print("[MakeProfile] save error:", e)
-            self._toast("Save error!")
+            self._toast(self._t("toast_save_error"))
 
     def end_profile(self):
         def _yes_end():
@@ -1325,10 +1325,10 @@ class MakeProfileScreen(BaseRoasterScreen):
                 self._write_coil_safe(client, 501, 0)
                 self._write_coil_safe(client, 500, 0)
 
-            self._toast("Make Profile ended.")
+            self._toast(self._t("toast_make_ended"))
             self.go_back()
 
-        self._confirm("Are you sure you want to end the profile?", _yes_end)
+        self._confirm(self._t("confirm_end_profile"), _yes_end)
 
     def open_numeric(self, field_name: str, title: str, decimals: int, vmin: int, vmax: int):
         field_name = (field_name or "").strip()

@@ -60,8 +60,10 @@ class HomeScreen(BaseRoasterScreen):
             padding=20
         )
 
+        app = App.get_running_app()
+
         msg = Label(
-            text="Do you want to close the program?"
+            text=app.t("popup_close_msg")
         )
 
         btn_row = BoxLayout(
@@ -70,8 +72,8 @@ class HomeScreen(BaseRoasterScreen):
             height=50
         )
 
-        yes_btn = Button(text="Yes")
-        no_btn = Button(text="No")
+        yes_btn = Button(text=app.t("popup_yes"))
+        no_btn = Button(text=app.t("popup_no"))
 
         btn_row.add_widget(yes_btn)
         btn_row.add_widget(no_btn)
@@ -80,7 +82,7 @@ class HomeScreen(BaseRoasterScreen):
         layout.add_widget(btn_row)
 
         self._close_popup = Popup(
-            title="Close Program",
+            title=app.t("popup_close_title"),
             content=layout,
             size_hint=(None, None),
             size=(420, 220),

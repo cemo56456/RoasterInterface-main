@@ -303,6 +303,9 @@ class LiveRoastScreen(BaseRoasterScreen):
             pass
         self._resume_poll()
 
+    def _t(self, key):
+        return App.get_running_app().t(key)
+
     def _show_warning_popup(self, title_text: str, msg_text: str, w=720, h=320):
         self._pause_poll()
         from kivy.factory import Factory
@@ -335,7 +338,7 @@ class LiveRoastScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(10)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_ok = Factory.RoundedPopupButtonSmall(text="OK")
+        b_ok = Factory.RoundedPopupButtonSmall(text=self._t("popup_ok"))
         row.add_widget(b_ok)
         inner.add_widget(row)
 
@@ -452,8 +455,8 @@ class LiveRoastScreen(BaseRoasterScreen):
         # ✅ Make Profile aktifken Profile Start/Stop blok
         if int(self.m501_state) == 1:
             self._show_warning_popup(
-                "MAKE PROFILE ACTIVE",
-                "Make Profile is running.\nPlease finish/cancel Make Profile first."
+                self._t("warn_make_active_title"),
+                self._t("warn_make_active_msg")
             )
             return
 
@@ -466,9 +469,9 @@ class LiveRoastScreen(BaseRoasterScreen):
         from kivy.factory import Factory
 
         running = (int(self.m500_state) == 1)
-        title_text = "PROFILE STOP" if running else "PROFILE START"
-        msg_text = "Do you want to stop the profile?" if running else "Do you want to start the profile?"
-        yes_text = "Stop" if running else "Start"
+        title_text = self._t("popup_profile_stop_title") if running else self._t("popup_profile_start_title")
+        msg_text = self._t("popup_profile_stop_msg") if running else self._t("popup_profile_start_msg")
+        yes_text = self._t("popup_stop") if running else self._t("popup_start")
 
         inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
 
@@ -498,7 +501,7 @@ class LiveRoastScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(8)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_no = Factory.RoundedPopupButtonSmall(text="Cancel")
+        b_no = Factory.RoundedPopupButtonSmall(text=self._t("popup_cancel"))
         b_yes = Factory.RoundedPopupButtonSmall(text=yes_text)
         row.add_widget(b_no)
         row.add_widget(b_yes)
@@ -548,8 +551,8 @@ class LiveRoastScreen(BaseRoasterScreen):
         # ✅ Make Profile aktifken Profile ekranına giriş blok + uyarı
         if int(self.m501_state) == 1 :
             self._show_warning_popup(
-                "MAKE PROFILE BLOCKED",
-                "You cannot start Make Profile\nwhile a profile is running."
+                self._t("warn_make_blocked_title"),
+                self._t("warn_make_blocked_msg")
             )
             return
 
@@ -564,8 +567,8 @@ class LiveRoastScreen(BaseRoasterScreen):
 
         if int(self.m500_state) == 1 and int(self.m501_state) == 0:
             self._show_warning_popup(
-                "MAKE PROFILE BLOCKED",
-                "You cannot start Make Profile\nwhile a profile is running."
+                self._t("warn_make_blocked_title"),
+                self._t("warn_make_blocked_msg")
             )
             return
 
@@ -583,7 +586,7 @@ class LiveRoastScreen(BaseRoasterScreen):
         inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
 
         title = Label(
-            text="MAKE PROFILE",
+            text=self._t("popup_make_profile_title"),
             font_size="20sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -596,7 +599,7 @@ class LiveRoastScreen(BaseRoasterScreen):
         inner.add_widget(title)
 
         msg = Label(
-            text="Do you want to create a new profile?",
+            text=self._t("popup_make_profile_msg"),
             font_size="22sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -611,8 +614,8 @@ class LiveRoastScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(10)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_cancel = Factory.RoundedPopupButtonSmall(text="Cancel")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
+        b_cancel = Factory.RoundedPopupButtonSmall(text=self._t("popup_cancel"))
+        b_yes = Factory.RoundedPopupButtonSmall(text=self._t("popup_yes"))
         row.add_widget(b_cancel)
         row.add_widget(b_yes)
         inner.add_widget(row)
@@ -679,7 +682,7 @@ class LiveRoastScreen(BaseRoasterScreen):
 
 
         NumericKeypadPopup(
-            title="Set Value (°C)",
+            title=self._t("edit_set_value"),
             initial_text=current,
             max_decimals=1,
             min_value=0,
@@ -721,7 +724,7 @@ class LiveRoastScreen(BaseRoasterScreen):
             self._resume_poll()
 
         NumericKeypadPopup(
-            title="Exhaust Speed (%)",
+            title=self._t("kp_exhaust_speed"),
             initial_text=current,
             max_decimals=0,
             min_value=0,
@@ -764,7 +767,7 @@ class LiveRoastScreen(BaseRoasterScreen):
             self._resume_poll()
 
         NumericKeypadPopup(
-            title="Burner (%)",
+            title=self._t("edit_burner"),
             initial_text=current,
             max_decimals=0,
             min_value=0,
@@ -822,11 +825,13 @@ class LiveRoastScreen(BaseRoasterScreen):
             except Exception:
                 return "-- °C"
 
+        sec_unit = self._t("sec")
+
         def _fmt_sec(raw):
             try:
-                return f"{int(raw)} sec"
+                return f"{int(raw)} {sec_unit}"
             except Exception:
-                return "-- sec"
+                return f"-- {sec_unit}"
 
         def _fmt_pct(raw):
             try:
@@ -1097,22 +1102,11 @@ class LiveRoastScreen(BaseRoasterScreen):
         except Exception:
             pass
 
-        # banner map
-        banner_map = {
-            0: "Machine Ready",
-            1: "Heating Machine",
-            2: "Open Hopper Gate",
-            3: "Close Hopper Gate",
-            4: "Turning Point",
-            5: "First Crack",
-            6: "First Crack",
-            7: "Second Crack",
-            8: "Second Crack",
-            9: "Drop Out Coffee Beans",
-            10: "Chaffing",
-            11: "Emergency Stop",
-        }
-        self.banner_text = banner_map.get(banner_code, f"Status: {banner_code}")
+        # banner: PLC kodu 0..11 -> i18n anahtarı "banner_<kod>"
+        if 0 <= banner_code <= 11:
+            self.banner_text = self._t(f"banner_{banner_code}")
+        else:
+            self.banner_text = self._t("banner_unknown").format(banner_code)
 
         # time total sec (plot X)
         tsec = max(0, r_min * 60 + r_sec)

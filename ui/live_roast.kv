@@ -455,7 +455,7 @@
 
                         Label:
                             id: ov_hop_val
-                            text: "-- sec."
+                            text: "-- " + app.t("sec", app.lang)
                             font_size: FONT_SM
                             bold: True
                             color: 0.90, 0.90, 0.90, 1
@@ -497,7 +497,7 @@
 
                         Label:
                             id: ov_ch_val
-                            text: "-- sec"
+                            text: "-- " + app.t("sec", app.lang)
                             font_size: FONT_SM
                             bold: True
                             color: 0.90, 0.90, 0.90, 1
@@ -537,7 +537,7 @@
 
                         Label:
                             id: ov_cht_val
-                            text: "-- sec"
+                            text: "-- " + app.t("sec", app.lang)
                             font_size: FONT_SM
                             bold: True
                             color: 0.90, 0.90, 0.90, 1
@@ -766,7 +766,7 @@
 
                         # ---- ROASTING TIME ----
                         Label:
-                            text: "Roasting Time"
+                            text: app.t("lv_roasting_time", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -787,7 +787,7 @@
 
                         # ---- DRYING TIME ----
                         Label:
-                            text: "Drying Time"
+                            text: app.t("lv_drying_time", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -808,7 +808,7 @@
 
                         # ---- MILLARD TIME ----
                         Label:
-                            text: "Maillard Time"
+                            text: app.t("lv_maillard_time", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -829,7 +829,7 @@
 
                         # ---- DEVELOPMENT TIME ----
                         Label:
-                            text: "Development Time"
+                            text: app.t("pt_dev_time", app.lang)
                             font_size: FONT_LG
                             bold: False
                             color: 1, 1, 1, 1
@@ -850,7 +850,7 @@
 
                         # ---- ROR ----
                         Label:
-                            text: "Rate Of Rise"
+                            text: app.t("lv_ror", app.lang)
                             font_size: FONT_LG
                             bold: True
                             color: 1, 1, 1, 1
@@ -921,7 +921,7 @@
                             anchor_y: "top"
 
                             Button:
-                                text: "Profile Stop" if int(root.m500_state) == 1 else "Profile Start"
+                                text: app.t("lv_profile_stop", app.lang) if int(root.m500_state) == 1 else app.t("lv_profile_start", app.lang)
                                 font_size: FONT_LG
                                 bold: True
                                 size_hint_x: 1

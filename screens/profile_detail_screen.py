@@ -116,7 +116,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
         self.loaded_stem = profile_name or ""
 
         if folder_name:
-            self.title_text = folder_name or "Profile"
+            self.title_text = folder_name or self._t("tab_profile")
 
         def fnum(x, dec=1):
             try:
@@ -209,7 +209,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
             self.profile_name = (val or "").strip()
 
         TextKeypadPopup(
-            title="Profile Name",
+            title=self._t("profile_name"),
             initial_text=self.profile_name,
             on_ok=_on_ok
         ).open()
@@ -220,7 +220,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
 
         items = sorted(origin_dir.glob("*.png"))
         if not items:
-            self._toast("No origin png found in assets/origin/")
+            self._toast(self._t("toast_no_origin"))
             return
 
         class IconHit(ButtonBehavior, BoxLayout):
@@ -263,7 +263,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
         btn_back.bind(on_release=lambda *_: pop.dismiss())
 
         title = Label(
-            text="Select Coffee Origin",
+            text=self._t("select_origin"),
             font_size="22sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -490,7 +490,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
             self._sync_dev_time()
 
         NumericKeypadPopup(
-            title="Development Time - Minutes",
+            title=self._t("pd_dev_min_title"),
             initial_text=self.dev_time_min or "00",
             max_decimals=0,
             min_value=0,
@@ -512,7 +512,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
             self._sync_dev_time()
 
         NumericKeypadPopup(
-            title="Development Time - Seconds",
+            title=self._t("pd_dev_sec_title"),
             initial_text=self.dev_time_sec or "00",
             max_decimals=0,
             min_value=0,
@@ -612,11 +612,11 @@ class ProfileDetailScreen(BaseRoasterScreen):
                         print(f"[ProfileDetailScreen] old file delete error: {e}")
 
             self.loaded_stem = name
-            self._toast(f"Saved: {name}")
+            self._toast(self._t("toast_saved").format(name=name))
 
         except Exception as e:
             print(f"[ProfileDetailScreen] Save error: {e}")
-            self._toast("Save error!")
+            self._toast(self._t("toast_save_error"))
 
     def confirm_send_to_plc(self):
         from kivy.factory import Factory
@@ -624,7 +624,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
         inner = BoxLayout(orientation="vertical", spacing=dp(14), padding=(dp(6), dp(6)))
 
         msg = Label(
-            text="Send this profile to PLC?",
+            text=self._t("confirm_send_plc"),
             font_size="20sp",
             bold=True,
             color=(1, 1, 1, 1),
@@ -652,8 +652,8 @@ class ProfileDetailScreen(BaseRoasterScreen):
         inner.add_widget(Factory.Widget(size_hint_y=None, height=dp(10)))
 
         row = BoxLayout(size_hint_y=None, height=dp(56), spacing=dp(14))
-        b_no = Factory.RoundedPopupButtonSmall(text="No")
-        b_yes = Factory.RoundedPopupButtonSmall(text="Yes")
+        b_no = Factory.RoundedPopupButtonSmall(text=self._t("popup_no"))
+        b_yes = Factory.RoundedPopupButtonSmall(text=self._t("popup_yes"))
         row.add_widget(b_no)
         row.add_widget(b_yes)
         inner.add_widget(row)
@@ -834,7 +834,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
     def send_to_plc(self):
         client = self._get_modbus_client()
         if not client:
-            self._toast("Modbus client not found in App (modbus_client/modbus/client).")
+            self._toast(self._t("toast_no_modbus"))
             return
 
         # DEV validation
@@ -846,16 +846,16 @@ class ProfileDetailScreen(BaseRoasterScreen):
                 mm = int(self.dev_time_min or "0")
                 ss = int(self.dev_time_sec or "0")
             except Exception:
-                self._toast("DEV mode: Development Time invalid.")
+                self._toast(self._t("toast_dev_invalid"))
                 return
 
             if mm < 0 or mm > 99 or ss < 0 or ss > 59:
-                self._toast("DEV mode: Development Time out of range.")
+                self._toast(self._t("toast_dev_range"))
                 return
 
             # register check
             if int(self.MW_DEV_MIN or 0) <= 0 or int(self.MW_DEV_SEC or 0) <= 0:
-                self._toast("DEV mode: MW_DEV_MIN / MW_DEV_SEC is not set!")
+                self._toast(self._t("toast_dev_regs"))
                 return
 
         mw_map = self._mw_map_from_ui()
@@ -868,7 +868,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
 
         if errors:
             print("[ProfileDetailScreen] PLC write errors:", errors)
-            self._toast("PLC write error!\n" + "\n".join(errors[:6]))
+            self._toast(self._t("toast_plc_write_error") + "\n" + "\n".join(errors[:6]))
             return
 
         self.manager.current = "live"
