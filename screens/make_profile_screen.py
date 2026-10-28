@@ -867,7 +867,7 @@ class MakeProfileScreen(BaseRoasterScreen):
             self._editing_field = ""
 
     def open_origin_picker(self):
-        origin_dir = self._project_root() / "assets" / "origin"
+        origin_dir = self._resource_root() / "assets" / "origin"
         origin_dir.mkdir(parents=True, exist_ok=True)
         items = sorted(origin_dir.glob("*.png"))
         if not items:

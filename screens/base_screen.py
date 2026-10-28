@@ -106,6 +106,17 @@ class BaseRoasterScreen(Screen):
         except Exception:
             return Path(".").resolve()
 
+    def _resource_root(self) -> Path:
+        """
+        Read-only files shipped with the app (assets/, ui/). In the built exe
+        they live in the PyInstaller bundle (_internal), not next to the exe,
+        so don't use _project_root() for them.
+        """
+        meipass = getattr(sys, "_MEIPASS", None)
+        if meipass:
+            return Path(meipass)
+        return Path(__file__).resolve().parents[1]
+
     # ---------------------------------------------------------
     # Toast
     # ---------------------------------------------------------

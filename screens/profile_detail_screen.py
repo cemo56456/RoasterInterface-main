@@ -215,7 +215,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
         ).open()
 
     def open_origin_picker(self):
-        origin_dir = self._project_root() / "assets" / "origin"
+        origin_dir = self._resource_root() / "assets" / "origin"
         origin_dir.mkdir(parents=True, exist_ok=True)
 
         items = sorted(origin_dir.glob("*.png"))
@@ -545,7 +545,7 @@ class ProfileDetailScreen(BaseRoasterScreen):
     def _resolve_origin_png(self, stem: str) -> str:
         if not stem:
             return ""
-        p = self._project_root() / "assets" / "origin" / f"{stem}.png"
+        p = self._resource_root() / "assets" / "origin" / f"{stem}.png"
         return str(p) if p.exists() else ""
 
     def save_profile(self):

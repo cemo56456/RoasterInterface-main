@@ -1,0 +1,41 @@
+ROSTEK KAVURMA ARAYUZU - KURULUM
+================================
+
+1) KLASORU KOPYALA
+   Bu "Rostek" klasorunun tamamini makinedeki bilgisayara kopyala:
+       C:\Rostek
+   "Program Files" icine KOYMA. Uygulama profilleri ve ayarlari
+   exe'nin yanina yazar, Program Files'ta buna izin yoktur.
+   Python kurmaya gerek yok, her sey klasorun icinde.
+
+2) PLC ADRESINI GIR
+   C:\Rostek\config.json dosyasini Not Defteri ile ac.
+   "host" satirindaki adresi PLC'nin gercek IP adresiyle degistir:
+       "host": "192.168.1.50",      <- simdilik yer tutucu
+   "simulation" satiri false kalmali (true = sahte veri, PLC'ye baglanmaz).
+   Kaydet. Uygulama acikken degistirdiysen kapatip yeniden ac.
+
+3) ILK CALISTIRMA
+   C:\Rostek\RoasterInterface.exe dosyasina cift tikla.
+   - Acilis ekraninda logo gelmeli. Sol alttaki yesil nokta PLC baglantisidir.
+   - Kapatmak icin: acilis ekraninda SAG ALT koseye basili tut -> "Evet".
+   Siyah ekran veya hata alirsan: bilgisayarin ekran kartinin surucusunu
+   guncelle. Cozulmezse destek ile iletisime gec (ANGLE modu acilabilir).
+
+4) BILGISAYAR ACILINCA OTOMATIK BASLASIN
+   - RoasterInterface.exe'ye sag tik -> "Kisayol olustur".
+   - Kisayola sag tik -> Ozellikler -> "Baslangic yeri": C:\Rostek
+   - Win+R -> shell:startup yaz -> Enter. Kisayolu acilan klasore tasi.
+
+5) WINDOWS AYARLARI (onerilir)
+   - Ekran koruyucu: Yok.  Uyku / ekrani kapat: Hicbir zaman.
+   - Windows Update: "Etkin saatler"i calisma saatlerine ayarla,
+     kavurma sirasinda yeniden baslatmasin.
+
+GUNCELLEME
+   Yeni surumde sadece RoasterInterface.exe ve _internal klasorunu degistir.
+   config.json, settings.json ve profiles klasorune DOKUNMA, bunlar
+   makinenin kendi ayarlari ve profilleridir.
+
+YEDEK
+   Profiller C:\Rostek\profiles icindedir. Ara sira bu klasoru yedekle.

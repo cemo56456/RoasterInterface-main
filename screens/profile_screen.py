@@ -139,7 +139,7 @@ class ProfileScreen(BaseRoasterScreen):
     # Icons
     # ---------------------------------------------------------
     def _icon(self, filename: str) -> str:
-        p = self._project_root() / "assets" / "icons" / filename
+        p = self._resource_root() / "assets" / "icons" / filename
         return str(p) if p.exists() else ""
 
     def _folder_icon(self) -> str:
