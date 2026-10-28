@@ -1,8 +1,11 @@
 ROSTEK KAVURMA ARAYUZU - KURULUM
 ================================
 
-1) KLASORU KOPYALA
-   Bu "Rostek" klasorunun tamamini makinedeki bilgisayara kopyala:
+1) ZIP'I INDIR VE AC
+   GitHub sayfasindaki "Releases" bolumunden en son Rostek-....zip dosyasini
+   indir. Zip'e sag tik -> "Tumunu ayikla" -> hedef olarak C:\ yaz.
+   Sonucta C:\Rostek klasoru olusmali (icinde RoasterInterface.exe).
+   (USB ile getirdiysen "Rostek" klasorunu oldugu gibi C:\ altina kopyala.)
        C:\Rostek
    "Program Files" icine KOYMA. Uygulama profilleri ve ayarlari
    exe'nin yanina yazar, Program Files'ta buna izin yoktur.
@@ -13,6 +16,10 @@ ROSTEK KAVURMA ARAYUZU - KURULUM
    "host" satirindaki adresi PLC'nin gercek IP adresiyle degistir:
        "host": "192.168.1.50",      <- simdilik yer tutucu
    "simulation" satiri false kalmali (true = sahte veri, PLC'ye baglanmaz).
+
+   MQTT (bulut baglantisi) kullanilacaksa ayni dosyada "mqtt" bolumundeki
+   "username" ve "password" alanlarini doldur. Zip herkese acik oldugu icin
+   bu bilgiler zip'te BOS gelir. Bos kalirsa uygulama MQTT'siz calisir.
    Kaydet. Uygulama acikken degistirdiysen kapatip yeniden ac.
 
 3) ILK CALISTIRMA
@@ -33,7 +40,9 @@ ROSTEK KAVURMA ARAYUZU - KURULUM
      kavurma sirasinda yeniden baslatmasin.
 
 GUNCELLEME
-   Yeni surumde sadece RoasterInterface.exe ve _internal klasorunu degistir.
+   Yeni zip'i indir, gecici bir klasore ac.
+   Oradan sadece RoasterInterface.exe ve _internal klasorunu C:\Rostek'e kopyala
+   (uzerine yaz). Uygulama kapaliyken yap.
    config.json, settings.json ve profiles klasorune DOKUNMA, bunlar
    makinenin kendi ayarlari ve profilleridir.
 

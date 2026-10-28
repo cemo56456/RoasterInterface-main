@@ -4,16 +4,21 @@ Builds the app with PyInstaller and assembles a ready-to-copy folder:
     release/Rostek/
         RoasterInterface.exe
         _internal/          (Python, Kivy, ui, assets - read-only)
-        config.json         (simulation OFF, PLC IP placeholder)
+        config.json         (simulation OFF, PLC IP placeholder, no MQTT secrets)
         profiles/           (copied from this project)
         KURULUM.txt
+    release/Rostek-<version>.zip   (same folder zipped, for GitHub Releases)
 
-Run with the project venv:  venv\\Scripts\\python.exe build_release.py
-(or just double-click build.bat)
+Run with the project venv:  venv\\Scripts\\python.exe build_release.py [version]
+(or just double-click build.bat). Version defaults to today's date.
 
 release/Rostek is recreated from scratch on every build. Do not keep the
 machine's real config/profiles there; they live on the target PC.
+
+The GitHub repo is public, so the zip must never contain MQTT credentials:
+username/password are left empty and entered on the target PC.
 """
+import datetime
 import json
 import shutil
 import subprocess
@@ -66,10 +71,19 @@ def assemble():
     modbus.setdefault("unit_id", 2)
     modbus.setdefault("timeout", 1.5)
 
+    # keep broker/port, never ship credentials (zip is downloadable by anyone)
+    mqtt_src = cfg.get("mqtt", {})
+    mqtt = {
+        "broker": mqtt_src.get("broker", ""),
+        "port": mqtt_src.get("port", 8883),
+        "username": "",
+        "password": "",
+    }
+
     release_cfg = {
         "simulation": False,
         "modbus": modbus,
-        "mqtt": cfg.get("mqtt", {"broker": "", "port": 8883, "username": "", "password": ""}),
+        "mqtt": mqtt,
     }
     (OUT / "config.json").write_text(
         json.dumps(release_cfg, ensure_ascii=False, indent=4), encoding="utf-8"
@@ -78,12 +92,24 @@ def assemble():
     shutil.copy2(ROOT / "KURULUM.txt", OUT / "KURULUM.txt")
 
 
+def make_zip(version):
+    step("Zip")
+    base = OUT.parent / f"Rostek-{version}"
+    zip_path = Path(shutil.make_archive(str(base), "zip", root_dir=OUT.parent, base_dir=OUT.name))
+    print(f"{zip_path}  ({zip_path.stat().st_size / 1e6:.0f} MB)")
+    return zip_path
+
+
 def main():
+    version = sys.argv[1] if len(sys.argv) > 1 else datetime.date.today().isoformat()
     build_exe()
     assemble()
+    zip_path = make_zip(version)
     step("Done")
-    print(f"Copy this folder to the target PC (e.g. C:\\Rostek):\n  {OUT}")
+    print(f"Folder: {OUT}")
+    print(f"Zip   : {zip_path}  -> upload to GitHub Releases")
     print(f"PLC IP in config.json is a placeholder: {PLC_IP_PLACEHOLDER}")
+    print("MQTT username/password are empty: enter them on the target PC")
 
 
 if __name__ == "__main__":
